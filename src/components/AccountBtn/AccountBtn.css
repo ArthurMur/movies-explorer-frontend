@@ -1,0 +1,40 @@
+.account {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: 40px; 
+  box-shadow: 0px 3px 14px 0px rgba(0, 0, 0, 0.08)
+}
+
+.account-text {
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 12px;
+}
+
+.account-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 26px;
+  height: 26px;
+  border-radius: 50% 50%;
+  cursor: pointer;
+  transition: var(--animate-opacity), var(--animate-transform);
+  text-decoration: none;
+  background-color: var(--btn-color-medium);
+  background-image: url('../../images/iconAccount.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px 12px;
+  margin-right: 3px;
+}
+
+.account-btn:hover {
+  opacity: var(--opacity-btn);
+}
+
+.account-btn:active {
+  transform: var(--translateY);
+}

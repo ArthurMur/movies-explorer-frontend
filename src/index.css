@@ -1,0 +1,57 @@
+@import url('./vendor/normalize.css');
+@import url('./vendor/fonts/fonts.css');
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-color-dark4);
+}
+
+/* colors */
+:root {
+  --bg-color-dark: #303030;
+  --bg-color-dark2: #222;
+  --bg-color-dark3: #272727;
+  --bg-color-dark4: #202020;
+  --bg-color-light: #424242;
+  --bg-color-light2: #8b8b8b;
+  --bg-color-medium: #073042;
+  --border-color-light: #e6e6e6;
+  --btn-color-grey: #c2c2c2;
+  --btn-color-red: #ee3465;
+  --btn-color-green: #3ddc84;
+  --btn-color-medium: #313131;
+  --btn-color-ocean: #4285f4;
+  --btn-color-white: #f8f8f8;
+  --search-color-medium: #2f2f2f;
+  --text-color-dark: #2f2f2f;
+  --text-color-dark2: #000;
+  --text-color-light: #a0a0a0;
+  --text-color-light2: #fff;
+}
+
+/* animation */
+:root {
+  --animation-cubic: cubic-bezier(0.3, 0.8, 0, 1);
+  --animation-time: 1s;
+}
+
+/* opacity */
+:root {
+  --opacity-btn: 0.8;
+  --opacity-link: 0.69;
+}
+
+/* transform */
+:root {
+  --scale: scale(0.9);
+  --translateY: translateY(5%);
+}
+
+/* transition */
+:root {
+  --animate-opacity: opacity var(--animation-time) var(--animation-cubic);
+  --animate-transform: transform 0.5s var(--animation-cubic);
+}
