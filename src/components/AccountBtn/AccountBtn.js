@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 
 function AccountBtn({ onClose }) {
   return (
-    <div className='account'>
+    <Link className='account' to="/profile" onClick={onClose ?? undefined}>
     <p className='account-text'>Аккаунт</p>
-    <Link className="account-btn" to="/profile" onClick={onClose ?? undefined}></Link>
-    </div>
+    <div className="account-btn" ></div>
+    </Link>
   );
 }
 

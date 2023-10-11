@@ -12,7 +12,7 @@ function MoviesCard({ imageUrl, name, duration, button, onButtonClick }) {
         {button === 'save' ? 'Сохранить' : ''}
       </button>
       <div className="movies-card__container">
-        <p className="movies-card__text">{name}</p>
+        <h3 className="movies-card__text">{name}</h3>
         <span className="movies-card__time">{duration}</span>
       </div>
     </li> 

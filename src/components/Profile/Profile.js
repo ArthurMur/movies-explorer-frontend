@@ -28,7 +28,7 @@ function Profile({ user = { name: 'Виталий', email: 'pochta@yandex.ru' },
       className="profile tablet-container-medium mobile-container-small"
       aria-label="Страница регистрации"
     >
-      <h2 className="profile__title">Привет, {name}!</h2>
+      <h1 className="profile__title">Привет, {name}!</h1>
       <Form
         isProfileEdit={isEditing}
         btnText="Сохранить"

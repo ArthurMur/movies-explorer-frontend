@@ -48,7 +48,7 @@
   align-items: center;
   justify-content: center;
   width: 90px;
-  height: 60px;
+  min-height: 60px;
   user-select: none;
   transition: transform var(--animation-time) var(--animation-cubic);
   letter-spacing: -0.04em;

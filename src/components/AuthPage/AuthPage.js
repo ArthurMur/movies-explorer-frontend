@@ -21,7 +21,7 @@ function AuthPage({
       aria-label="Страница авторизации"
     >
       <Logo />
-      <h2 className="auth-page__title">{title}</h2>
+      <h1 className="auth-page__title">{title}</h1>
       <Form
         btnText={btnText}
         type={name}

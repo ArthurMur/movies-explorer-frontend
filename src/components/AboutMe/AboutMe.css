@@ -151,7 +151,7 @@
 
   .about-me__info {
     grid-area: 4/1;
-    padding-bottom: 24px;
+    padding-bottom: 40px;
     font-size: 11px;
     line-height: 1.45;
   }

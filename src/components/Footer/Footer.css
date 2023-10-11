@@ -66,7 +66,7 @@
 @media screen and (max-width: 750px) {
   .footer {
     grid-template-columns: 1fr;
-    padding: 59px 0 19px;
+    padding: 49px 0 19px;
   }
 
   .footer__title {
