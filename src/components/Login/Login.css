@@ -1,0 +1,81 @@
+.login {
+  box-sizing: border-box;
+}
+.login__input-label {
+  color: var(--bg-color-light2);
+  font-size: 10px;
+}
+.login__input {
+  height: 46px;
+  margin: 10px 0 0 0;
+  transition: border-bottom var(--animation-time) var(--animation-cubic);
+  color: inherit;
+  border: none;
+  outline: transparent;
+  background-color: transparent;
+  font-size: 13px;
+  line-height: normal;
+  border-radius: 8px;
+  background: var(--search-color-medium);
+  padding: 0 0 0 15px;
+}
+
+.login__input::placeholder {
+  color: var(--bg-color-light2);
+}
+
+.login__input:last-of-type {
+  margin-bottom: 8px;
+}
+
+.login__input:focus {
+  letter-spacing: 0;
+  border-bottom: 1px solid var(--btn-color-ocean);
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.login__input_invalid {
+  color: var(--btn-color-red);
+  border-bottom: 1px solid var(--btn-color-red);
+}
+
+.login__input:invalid:focus {
+  border-bottom: 1px solid var(--btn-color-red);
+}
+
+.login__input_type_password {
+  font-size: 8px;
+}
+
+.login__input_type_password:focus {
+  font-size: 8px;
+}
+
+.login__input-error {
+  width: 396px;
+  height: 21px;
+  color: var(--btn-color-red);
+}
+
+.login__input-error_active {
+  overflow: hidden;
+  max-width: -webkit-fill-available;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--btn-color-red);
+  font-size: 10px;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.2;
+}
+
+@media screen and (max-width: 750px) {
+  .login__input-error:last-of-type {
+    margin-bottom: 80px;
+  }
+
+  .login__input-error {
+    width: 260px;
+  }
+}
