@@ -95,6 +95,7 @@
   font-weight: 500;
   font-style: normal;
   line-height: normal;
+  max-width: 290px;
 }
 
 .movies-card__time {
@@ -135,6 +136,10 @@
   .movies-card__link {
     max-height: 190px;
   }
+
+  .movies-card__text {
+    max-width: 260px;
+  }
 }
 
 @media screen and (max-width: 750px) {
@@ -146,6 +151,7 @@
   .movies-card__text {
     font-size: 12px;
     line-height: inherit;
+    max-width: 240px;
   }
 
   .movies-card__container {
