@@ -56,6 +56,10 @@ class MainApi {
     return this._fetch('/movies');
   }
 
+  getAllNeededData() {
+    return Promise.all([this.getUserInfo(), this.getSavedMovies()]);
+  }
+
   // Создание нового фильма
   createMovie({
     country,
@@ -100,6 +104,10 @@ class MainApi {
     return this._fetch('/signout', {
       method: 'GET',
     });
+  }
+
+  getToken() {
+    return this._headers.authorization = `Bearer ${localStorage.getItem('jwt')}`;
   }
 }
 

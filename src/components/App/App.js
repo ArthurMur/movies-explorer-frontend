@@ -22,7 +22,7 @@ import { mainApi } from '../../utils/MainApi';
 import { moviesApi } from '../../utils/MoviesApi';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Залогинился пользователь или нет
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') || false); // Залогинился пользователь или нет
   const [isPageLoading, setIsPageLoading] = useState(true); // Состояние, определяющее, идет ли загрузка страницы
   const [isMoviesLoading, setIsMoviesLoading] = useState(false); // Состояние, определяющее, идет ли загрузка данных о фильмах
   const [isSavedMoviesLoading, setIsSavedMoviesLoading] = useState(false); // Состояние, определяющее, идет ли загрузка данных о сохраненных фильмах
@@ -84,6 +84,20 @@ function App() {
     };
     validateToken();
   }, [handleError]);
+
+  useEffect(() => {
+    mainApi.getToken();
+    if(isLoggedIn) {
+      mainApi.getAllNeededData()
+        .then(([userInfo, savedByUserMovies]) => {
+          setCurrentUser(userInfo);
+          setSavedInitialMovies(savedByUserMovies);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    }
+  }, [isLoggedIn]);
 
   // Фильтруем фильмы
   const filterMovies = (movies, search, isChecked) => {
@@ -204,19 +218,20 @@ function App() {
   // Обработчик входа в систему
   const handleLogin = async ({ email, password }) => {
     setIsLoginLoading(true); // Устанавливаем флаг загрузки во время входа
-    try {
-      const { data } = await mainApi.loginUser({ email, password });
-      setCurrentUser(data); // Сохраняем информацию о текущем пользователе
-      navigate('/movies', { replace: true }); // Перенаправляем пользователя на страницу фильмов
-      setIsLoggedIn(true); // Устанавливаем флаг "пользователь вошел в систему"
-      localStorage.setItem('jwt', 'true'); // Сохраняем информацию о входе в локальное хранилище
-    } catch (err) {
+      const { data } = await mainApi.loginUser({ email, password })
+      .then((res) => {
+        localStorage.setItem('jwt', res.token);
+        setIsLoggedIn(true); // Устанавливаем флаг "пользователь вошел в систему"
+        setCurrentUser(data); // Сохраняем информацию о текущем пользователе
+        localStorage.setItem('isLoggedIn', 'true'); // Сохраняем информацию о входе в локальное хранилище
+        navigate('/movies', { replace: true }); // Перенаправляем пользователя на страницу фильмов
+      }).catch ((err) => {
       console.log(err); 
       handleError(err); 
       setIsLoggedIn(false); // Устанавливаем флаг "пользователь не вошел в систему"
-    } finally {
+    }).finally(() => {
       setIsLoginLoading(false); // Скрываем лоадер после завершения операции
-    }
+    })
   };
 
   // Обработчик регистрации
