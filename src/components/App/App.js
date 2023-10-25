@@ -76,11 +76,12 @@ function App() {
 
   // Фильтруем фильмы
   const filterMovies = (movies, search, isChecked) => {
+    
     // Если нет поискового запроса, вернем исходный список фильмов
     if (!search) {
       return isChecked ? movies.filter(movie => movie.duration <= SHORT_MOVIE_DURATION) : movies;
     }
-  
+
     // Преобразуем поисковый запрос и названия фильмов в нижний регистр для сравнения
     const lowerCaseSearch = search.toLowerCase();
   
