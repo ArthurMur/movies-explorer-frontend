@@ -13,7 +13,6 @@ import Movies from '../Movies/Movies';
 import SavedMovies from '../SavedMovies/SavedMovies';
 import Profile from '../Profile/Profile';
 import NotFound from '../NotFound/NotFound';
-import Preloader from '../Preloader/Preloader';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
@@ -23,7 +22,6 @@ import { moviesApi } from '../../utils/MoviesApi';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') || false); // Залогинился пользователь или нет
-  const [isPageLoading, setIsPageLoading] = useState(true); // Состояние, определяющее, идет ли загрузка страницы
   const [isMoviesLoading, setIsMoviesLoading] = useState(false); // Состояние, определяющее, идет ли загрузка данных о фильмах
   const [isSavedMoviesLoading, setIsSavedMoviesLoading] = useState(false); // Состояние, определяющее, идет ли загрузка данных о сохраненных фильмах
   const [isRegisterLoading, setIsRegisterLoading] = useState(false); // Состояние, определяющее, идет ли загрузка при регистрации
@@ -61,29 +59,6 @@ function App() {
     },
     [openTooltip],
   );
-
-  // Проверка токена при загрузке страницы и получение информации о пользователе
-  useEffect(() => {
-    const validateToken = async () => {
-      setIsPageLoading(true);
-      try {
-        const jwt = localStorage.getItem('jwt');
-        if (jwt) {
-          const userData = await mainApi.getUserInfo();
-          if (userData) {
-            setIsLoggedIn(true);
-            setCurrentUser(userData);
-          }
-        }
-      } catch (err) {
-        console.log(err);
-        handleError(err);
-      } finally {
-        setIsPageLoading(false);
-      }
-    };
-    validateToken();
-  }, [handleError]);
 
   useEffect(() => {
     mainApi.getToken();
@@ -453,11 +428,6 @@ function App() {
     <Login isLoggedIn={isLoggedIn} onSubmit={handleLogin} isLoading={isLoginLoading} />
   );
   const notFoundComponent = <NotFound />;
-
-  // Если страница все еще загружается, отображаем прелоадер
-  if (isPageLoading) {
-    return <Preloader />;
-  }
 
   // Функция для определения, какой компонент отображать на основе текущего пути
   const displayComponent = (routes) => routes.includes(pathname);
