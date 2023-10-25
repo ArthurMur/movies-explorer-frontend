@@ -381,17 +381,12 @@ function App() {
 
   // Обработчик выхода из системы
   const handleLogout = async () => {
-    try {
-      await mainApi.logout();
       localStorage.clear();
       setIsLoggedIn(false);
       setCurrentUser({});
       setInitialMovies([]);
       setIsSearched(false);
       navigate('/', { replace: true });
-    } catch (err) {
-      console.log(err);
-    }
   };
 
   // Сброс сообщения об ошибке на сервере

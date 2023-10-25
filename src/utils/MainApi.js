@@ -99,13 +99,6 @@ class MainApi {
     });
   }
 
-  // Метод для выхода из системы (logout)
-  logout() {
-    return this._fetch('/signout', {
-      method: 'GET',
-    });
-  }
-
   getToken() {
     return this._headers.authorization = `Bearer ${localStorage.getItem('jwt')}`;
   }
