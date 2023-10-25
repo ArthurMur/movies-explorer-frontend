@@ -128,6 +128,8 @@ function App() {
   
   // Обработчик фильтрации данных фильмов
   const handleFilterMoviesData = useCallback(async (search, isChecked) => {
+    // Устанавливаем флаг поиска
+    setIsSearched(true);
     // Получение данных из локального хранилища
     const savedInLs = localStorage.getItem('movies');
     const savedData = savedInLs ? JSON.parse(savedInLs) : null;
