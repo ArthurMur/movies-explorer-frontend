@@ -216,25 +216,36 @@ function App() {
   useEffect(() => {
     isLoggedIn && getSavedMovies();
   }, [getSavedMovies, isLoggedIn]);
-
+  
   // Обработчик входа в систему
   const handleLogin = async ({ email, password }) => {
     setIsLoginLoading(true); // Устанавливаем флаг загрузки во время входа
-      const { data } = await mainApi.loginUser({ email, password })
-      .then((res) => {
+  
+    try {
+      const res = await mainApi.loginUser({ email, password });
+  
+      if (res.token) {
+        // Вход в систему успешен
         localStorage.setItem('jwt', res.token);
         setIsLoggedIn(true); // Устанавливаем флаг "пользователь вошел в систему"
-        setCurrentUser(data); // Сохраняем информацию о текущем пользователе
+        setCurrentUser({
+          email: res.email,
+          name: res.name
+        }); // Сохраняем информацию о текущем пользователе
         localStorage.setItem('isLoggedIn', 'true'); // Сохраняем информацию о входе в локальное хранилище
         navigate('/movies', { replace: true }); // Перенаправляем пользователя на страницу фильмов
-      }).catch ((err) => {
-      console.log(err); 
-      handleError(err); 
+      } else {
+        console.log("Не удалось войти в систему. Токен не получен.");
+        setIsLoggedIn(false); // Устанавливаем флаг "пользователь не вошел в систему"
+      }
+    } catch (err) {
+      console.log(err);
+      handleError(err);
       setIsLoggedIn(false); // Устанавливаем флаг "пользователь не вошел в систему"
-    }).finally(() => {
+    } finally {
       setIsLoginLoading(false); // Скрываем лоадер после завершения операции
-    })
-  };
+    }
+  };  
 
   // Обработчик регистрации
   const handleRegister = async ({ name, email, password }) => {
