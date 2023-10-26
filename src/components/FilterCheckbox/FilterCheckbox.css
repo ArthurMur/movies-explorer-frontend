@@ -1,0 +1,68 @@
+.filter-checkbox {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 70px;
+  user-select: none;
+  border-bottom: 1px solid var(--bg-color-light);
+  font-size: 14px;
+  line-height: 1.29;
+}
+
+.filter-checkbox__text {
+  cursor: pointer;
+}
+
+.filter-checkbox__input {
+  position: absolute;
+  width: 36px;
+  height: 20px;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.filter-checkbox__input + .filter-checkbox__text_active {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  cursor: pointer;
+  transition: all 0.5s var(--animation-cubic);
+  border-radius: 20px;
+  background-color: var(--bg-color-dark);
+}
+
+.filter-checkbox__input + .filter-checkbox__text_active::before {
+  position: absolute;
+  left: 2px;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  content: '';
+  transition: inherit; /* Наследует скорость анимации от родительского элемента .filter-checkbox__text_active */
+  transform: translate(0, -50%);
+  border-radius: 50%;
+  background-color: var(--bg-color-light2);
+}
+
+.filter-checkbox__input:checked + .filter-checkbox__text_active {
+  background-color: var(--btn-color-green);
+}
+
+.filter-checkbox__input:checked + .filter-checkbox__text_active::before {
+  transform: translate(100%, -50%);
+  background-color: var(--text-color-light2);
+}
+
+@media screen and (max-width: 1175px) {
+  .filter-checkbox {
+    padding-bottom: 49px;
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .filter-checkbox {
+    font-size: 11px;
+    line-height: 1.64;
+  }
+}
