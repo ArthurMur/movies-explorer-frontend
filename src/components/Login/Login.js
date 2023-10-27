@@ -68,11 +68,12 @@ function Login({ onSubmit, isLoading, isLoggedIn }) {
           type="password"
           id="password"
           name="password"
-          minLength="6"
+          minLength="8"
           maxLength="30"
           value={values.password}
           onChange={handleChange}
           className= {`login__input ${!isFormValid && errors.password && 'login__input_invalid'}`}
+          placeholder="Введите пароль"
           autoComplete="off"
           required
           disabled={isLoading}

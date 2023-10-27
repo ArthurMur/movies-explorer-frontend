@@ -12,6 +12,7 @@ import Register from '../Register/Register';
 import Movies from '../Movies/Movies';
 import SavedMovies from '../SavedMovies/SavedMovies';
 import Profile from '../Profile/Profile';
+import Preloader from '../Preloader/Preloader';
 import NotFound from '../NotFound/NotFound';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
@@ -22,6 +23,7 @@ import { moviesApi } from '../../utils/MoviesApi';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') || false); // Залогинился пользователь или нет
+  const [isPageLoading, setIsPageLoading] = useState(true);
   const [isMoviesLoading, setIsMoviesLoading] = useState(false); // Состояние, определяющее, идет ли загрузка данных о фильмах
   const [isSavedMoviesLoading, setIsSavedMoviesLoading] = useState(false); // Состояние, определяющее, идет ли загрузка данных о сохраненных фильмах
   const [isRegisterLoading, setIsRegisterLoading] = useState(false); // Состояние, определяющее, идет ли загрузка при регистрации
@@ -60,19 +62,46 @@ function App() {
     [openTooltip],
   );
 
-  useEffect(() => {
-    mainApi.getToken();
-    if(isLoggedIn) {
-      mainApi.getAllNeededData()
-        .then(([userInfo, savedByUserMovies]) => {
-          setCurrentUser(userInfo);
-          setSavedInitialMovies(savedByUserMovies);
-        })
-        .catch((err) => {
+    // Проверка токена при загрузке страницы и получение информации о пользователе
+    useEffect(() => {
+      const validateToken = async () => {
+        setIsPageLoading(true);
+        try {
+          const jwt = localStorage.getItem('jwt');
+          console.log('jwt: ', jwt);
+          const loginTrue = localStorage.getItem('loginTrue');
+          console.log('loginTrue: ', loginTrue);
+          if (jwt) {
+            const userData = await mainApi.getUserInfo();
+            console.log('userData: ', userData);
+            if (userData) {
+              setIsLoggedIn(true);
+              setCurrentUser(userData);
+            }
+          }
+        } catch (err) {
           console.log(err);
-        })
-    }
-  }, [isLoggedIn]);
+          handleError(err);
+        } finally {
+          setIsPageLoading(false);
+        }
+      };
+      validateToken();
+    }, [handleError]);
+
+  // useEffect(() => {
+  //   mainApi.getToken();
+  //   if(isLoggedIn) {
+  //     mainApi.getAllNeededData()
+  //       .then(([userInfo, savedByUserMovies]) => {
+  //         setCurrentUser(userInfo);
+  //         setSavedInitialMovies(savedByUserMovies);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       })
+  //   }
+  // }, [isLoggedIn]);
 
   // Фильтруем фильмы
   const filterMovies = (movies, search, isChecked) => {
@@ -193,41 +222,33 @@ function App() {
     isLoggedIn && getSavedMovies();
   }, [getSavedMovies, isLoggedIn]);
   
-  // Обработчик входа в систему
-  const handleLogin = async ({ email, password }) => {
-    setIsLoginLoading(true); // Устанавливаем флаг загрузки во время входа
-  
-    try {
-      const res = await mainApi.loginUser({ email, password });
-  
-      if (res.token) {
-        // Вход в систему успешен
-        localStorage.setItem('jwt', res.token);
-        setIsLoggedIn(true); // Устанавливаем флаг "пользователь вошел в систему"
-        setCurrentUser({
-          email: res.email,
-          name: res.name
-        }); // Сохраняем информацию о текущем пользователе
-        localStorage.setItem('isLoggedIn', 'true'); // Сохраняем информацию о входе в локальное хранилище
-        navigate('/movies', { replace: true }); // Перенаправляем пользователя на страницу фильмов
-      } else {
-        console.log("Не удалось войти в систему. Токен не получен.");
-        setIsLoggedIn(false); // Устанавливаем флаг "пользователь не вошел в систему"
-      }
-    } catch (err) {
-      console.log(err);
-      handleError(err);
-      setIsLoggedIn(false); // Устанавливаем флаг "пользователь не вошел в систему"
-    } finally {
-      setIsLoginLoading(false); // Скрываем лоадер после завершения операции
-    }
-  };  
+// Обработчик входа в систему
+const handleLogin = async ({ email, password }) => {
+  setIsLoginLoading(true); // Устанавливаем флаг загрузки во время входа
+
+  try {
+    const { data } = await mainApi.loginUser({ email, password }); // Запрос на сервер для входа пользователя
+    console.log('вывод data в handleLogin: ',data);
+    setCurrentUser(data); // Устанавливаем данные текущего пользователя после успешного входа
+    navigate('/movies', { replace: true }); // Перенаправляем пользователя на страницу фильмов после успешного входа
+    setIsLoggedIn(true); // Устанавливаем флаг "пользователь вошел в систему"
+    localStorage.setItem('loginTrue', 'true'); // Сохраняем информацию о входе в локальное хранилище
+    console.log('вывод data в handleLogin: ',data);
+  } catch (err) {
+    console.log(err); // Логируем ошибку, если вход не удался
+    handleError(err); // Обрабатываем ошибку входа
+    setIsLoggedIn(false); // Устанавливаем флаг "пользователь не вошел в систему"
+  } finally {
+    setIsLoginLoading(false); // Скрываем лоадер после завершения операции входа
+  }
+};
 
   // Обработчик регистрации
   const handleRegister = async ({ name, email, password }) => {
     setIsRegisterLoading(true); // Устанавливаем флаг загрузки во время регистрации
     try {
       const { data } = await mainApi.registerUser({ name, email, password }); // Регистрируем пользователя
+      console.log('вывод data в handleRegister: ',data);
       if (data) {
         // Если регистрация прошла успешно, выполняем вход пользователя
         handleLogin({ email, password });
@@ -374,6 +395,7 @@ function App() {
   const resetSuccessState = () => {
     setIsSuccess(true);
   };
+  
 
   // Компоненты для роутинга
   const mainComponent = <Main />;
@@ -429,6 +451,11 @@ function App() {
     <Login isLoggedIn={isLoggedIn} onSubmit={handleLogin} isLoading={isLoginLoading} />
   );
   const notFoundComponent = <NotFound />;
+
+    // Если страница все еще загружается, отображаем прелоадер
+    if (isPageLoading) {
+      return <Preloader />;
+    }
 
   // Функция для определения, какой компонент отображать на основе текущего пути
   const displayComponent = (routes) => routes.includes(pathname);
