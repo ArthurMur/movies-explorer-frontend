@@ -71,7 +71,7 @@ function App() {
           console.log('jwt: ', jwt);
           const loginTrue = localStorage.getItem('loginTrue');
           console.log('loginTrue: ', loginTrue);
-          if (jwt) {
+          if (loginTrue) {
             const userData = await mainApi.getUserInfo();
             console.log('userData: ', userData);
             if (userData) {
@@ -226,40 +226,55 @@ function App() {
 const handleLogin = async ({ email, password }) => {
   setIsLoginLoading(true); // Устанавливаем флаг загрузки во время входа
 
-  try {
-    const { data } = await mainApi.loginUser({ email, password }); // Запрос на сервер для входа пользователя
-    console.log('вывод data в handleLogin: ',data);
-    setCurrentUser(data); // Устанавливаем данные текущего пользователя после успешного входа
-    navigate('/movies', { replace: true }); // Перенаправляем пользователя на страницу фильмов после успешного входа
-    setIsLoggedIn(true); // Устанавливаем флаг "пользователь вошел в систему"
-    localStorage.setItem('loginTrue', 'true'); // Сохраняем информацию о входе в локальное хранилище
-    console.log('вывод data в handleLogin: ',data);
-  } catch (err) {
-    console.log(err); // Логируем ошибку, если вход не удался
-    handleError(err); // Обрабатываем ошибку входа
-    setIsLoggedIn(false); // Устанавливаем флаг "пользователь не вошел в систему"
-  } finally {
-    setIsLoginLoading(false); // Скрываем лоадер после завершения операции входа
-  }
+  // try {
+  //   const { data } = await mainApi.loginUser({ email, password }); // Запрос на сервер для входа пользователя
+  //   console.log('вывод data в handleLogin: ',data);
+  //   const registerTrue = localStorage.getItem('registerTrue');
+  //   console.log('registerTrue: ', registerTrue);
+  //   setCurrentUser(data); // Устанавливаем данные текущего пользователя после успешного входа
+  //   navigate('/movies', { replace: true }); // Перенаправляем пользователя на страницу фильмов после успешного входа
+  //   setIsLoggedIn(true); // Устанавливаем флаг "пользователь вошел в систему"
+  //   localStorage.setItem('loginTrue', 'true'); // Сохраняем информацию о входе в локальное хранилище
+  //   console.log('вывод data в handleLogin: ',data);
+  // } catch (err) {
+  //   console.log(err); // Логируем ошибку, если вход не удался
+  //   handleError(err); // Обрабатываем ошибку входа
+  //   setIsLoggedIn(false); // Устанавливаем флаг "пользователь не вошел в систему"
+  // } finally {
+  //   setIsLoginLoading(false); // Скрываем лоадер после завершения операции входа
+  // }
 };
 
   // Обработчик регистрации
   const handleRegister = async ({ name, email, password }) => {
     setIsRegisterLoading(true); // Устанавливаем флаг загрузки во время регистрации
-    try {
-      const { data } = await mainApi.registerUser({ name, email, password }); // Регистрируем пользователя
-      console.log('вывод data в handleRegister: ',data);
-      if (data) {
-        // Если регистрация прошла успешно, выполняем вход пользователя
-        handleLogin({ email, password });
-      }
-    } catch (err) {
+    // try {
+    //   const { data } = await mainApi.registerUser({ name, email, password }); // Регистрируем пользователя
+    //   console.log('вывод data в handleRegister: ',data);
+    //   if (data) {
+    //     // Если регистрация прошла успешно, выполняем вход пользователя
+    //     handleLogin({ email, password });
+    //   }
+    // } catch (err) {
+    //   console.log(err);
+    //   handleError(err);
+    //   setIsLoggedIn(false); // Устанавливаем флаг "пользователь не вошел в систему"
+    // } finally {
+    //   setIsRegisterLoading(false); // Скрываем лоадер после завершения операции
+    // }
+    mainApi.register({ email, password, name })
+    .then(() => {
+      handleLogin({email, password});
+      localStorage.setItem('registerTrue: ', 'true'); // Сохраняем информацию о регистрации в локальное хранилище
+    })
+    .catch((err) => {
       console.log(err);
       handleError(err);
       setIsLoggedIn(false); // Устанавливаем флаг "пользователь не вошел в систему"
-    } finally {
+    })
+    .finally(() => {
       setIsRegisterLoading(false); // Скрываем лоадер после завершения операции
-    }
+    })
   };
 
   // Обработчик обновления профиля пользователя
