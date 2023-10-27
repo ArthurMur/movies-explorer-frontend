@@ -23,7 +23,6 @@ import { moviesApi } from '../../utils/MoviesApi';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') || false); // Залогинился пользователь или нет
-  const [isPageLoading, setIsPageLoading] = useState(true);
   const [isMoviesLoading, setIsMoviesLoading] = useState(false); // Состояние, определяющее, идет ли загрузка данных о фильмах
   const [isSavedMoviesLoading, setIsSavedMoviesLoading] = useState(false); // Состояние, определяющее, идет ли загрузка данных о сохраненных фильмах
   const [isRegisterLoading, setIsRegisterLoading] = useState(false); // Состояние, определяющее, идет ли загрузка при регистрации
@@ -499,11 +498,6 @@ const handleLogin = async ({ email, password }) => {
     <Login isLoggedIn={isLoggedIn} onSubmit={handleLogin} isLoading={isLoginLoading} />
   );
   const notFoundComponent = <NotFound />;
-
-    // Если страница все еще загружается, отображаем прелоадер
-    if (isPageLoading) {
-      return <Preloader />;
-    }
 
   // Функция для определения, какой компонент отображать на основе текущего пути
   const displayComponent = (routes) => routes.includes(pathname);
