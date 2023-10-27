@@ -48,7 +48,7 @@ function Register({ onSubmit, isLoading, isLoggedIn }) {
           type="text"
           id="name"
           name="name"
-          className="register__input"
+          className={`register__input ${!isFormValid && errors.name && 'register__input_invalid'}`}
           minLength="2"
           maxLength="30"
           autoComplete="off"
@@ -69,7 +69,7 @@ function Register({ onSubmit, isLoading, isLoggedIn }) {
           E-mail
         </label>
         <input
-          className="register__input"
+          className={`register__input ${!isFormValid && errors.email && 'register__input_invalid'}`}
           type="email"
           id="email"
           name="email"
@@ -91,7 +91,7 @@ function Register({ onSubmit, isLoading, isLoggedIn }) {
           Пароль
         </label>
         <input
-          className={`register__input register__input_type_password ${
+          className={`register__input ${
             !isFormValid && errors.password && 'register__input_invalid'}`}
           type="password"
           id="password"

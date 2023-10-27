@@ -44,7 +44,7 @@ function BurgerMenu({ isOpen, onClose }) {
             </NavLink>
           </li>
         </ul>
-        <AccountBtn onClick={onClose}/>
+        <AccountBtn onClose={onClose}/>
       </aside>
     </Overlay>
   );

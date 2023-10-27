@@ -25,10 +25,8 @@
 
 .profile__label {
   position: relative;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 18px;
-  padding-bottom: 16px;
+  display: grid;
+  grid-template-rows: 18px 16px;
 }
 
 .profile__label::after {
@@ -47,10 +45,13 @@
 }
 
 .profile__label:first-child {
+  margin-bottom: 18px;
   border-bottom: 1px solid var(--bg-color-light);
 }
 
 .profile__text {
+  grid-area: 1/1;
+  align-self: flex-start;
   width: 65px;
   font-size: 11px;
   font-weight: 500;
@@ -58,6 +59,8 @@
 }
 
 .profile__input {
+  grid-area: 1/2;
+  align-self: flex-start;
   width: 100%;
   padding: 0;
   text-align: end;
@@ -77,7 +80,7 @@
   max-width: 410px;
   white-space: nowrap;
   text-overflow: ellipsis;
-  color: var(--btn-color-light);
+  color: var(--btn-color-red);
   font-size: 10px;
   font-weight: 500;
   font-style: normal;
