@@ -70,6 +70,19 @@
   font-style: normal;
 }
 
+.profile__input-error {
+  overflow: hidden;
+  grid-area: 2 / span 2;
+  width: 100%;
+  max-width: 410px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--btn-color-light);
+  font-size: 10px;
+  font-weight: 500;
+  font-style: normal;
+}
+
 .profile__list-link {
   margin: 0;
   margin-top: 17px;

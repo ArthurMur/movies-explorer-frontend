@@ -38,14 +38,24 @@ function Movies({
 
   // Получение базового количества фильмов в зависимости от ширины экрана
   const getBaseCount = useCallback(() => {
-    if (screenWidth > DESKTOP_WIDTH) {
-      return NUMBER_CARDS_FOR_DESKTOP;
+    if (isSearched) {
+      if (screenWidth > DESKTOP_WIDTH) {
+        return NUMBER_CARDS_FOR_DESKTOP;
+      }
+      if (screenWidth > TABLET_WIDTH) {
+        return NUMBER_CARDS_FOR_TABLET;
+      }
+      return NUMBER_CARDS_FOR_MOBILE;
+    } else {
+      if (screenWidth > DESKTOP_WIDTH) {
+        return NUMBER_CARDS_FOR_DESKTOP;
+      }
+      if (screenWidth > TABLET_WIDTH) {
+        return NUMBER_CARDS_FOR_TABLET;
+      }
+      return NUMBER_CARDS_FOR_MOBILE;
     }
-    if (screenWidth > TABLET_WIDTH) {
-      return NUMBER_CARDS_FOR_TABLET;
-    }
-    return NUMBER_CARDS_FOR_MOBILE;
-  }, [screenWidth]);
+  }, [isSearched, screenWidth]);
 
   // Получение количества дополнительных фильмов в зависимости от ширины экрана
   const getAddCount = useCallback(
@@ -100,7 +110,7 @@ function Movies({
     return () => {// Возвращаем функцию для удаления обработчика при размонтировании
       window.removeEventListener('resize', handleResize);
     };
-  }, [getAddCount, getBaseCount]);
+  }, [getAddCount, getBaseCount, isSearched]);
 
 
   return (

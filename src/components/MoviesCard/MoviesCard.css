@@ -166,4 +166,8 @@
   .movies-card__link {
     max-height: 168px;
   }
+
+  .movies-card__btn_delete {
+    opacity: 1;
+  }
 }
