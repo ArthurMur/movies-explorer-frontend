@@ -64,30 +64,41 @@ function App() {
 
     // Проверка токена при загрузке страницы и получение информации о пользователе
     useEffect(() => {
-      const validateToken = async () => {
-        setIsPageLoading(true);
-        try {
-          const jwt = localStorage.getItem('jwt');
-          console.log('jwt: ', jwt);
-          const loginTrue = localStorage.getItem('loginTrue');
-          console.log('loginTrue: ', loginTrue);
-          if (loginTrue) {
-            const userData = await mainApi.getUserInfo();
-            console.log('userData: ', userData);
-            if (userData) {
-              setIsLoggedIn(true);
-              setCurrentUser(userData);
-            }
-          }
-        } catch (err) {
+      // const validateToken = async () => {
+      //   setIsPageLoading(true);
+      //   try {
+      //     const jwt = localStorage.getItem('jwt');
+      //     console.log('jwt: ', jwt);
+      //     const loginTrue = localStorage.getItem('loginTrue');
+      //     console.log('loginTrue: ', loginTrue);
+      //     if (loginTrue) {
+      //       const userData = await mainApi.getUserInfo();
+      //       console.log('userData: ', userData);
+      //       if (userData) {
+      //         setIsLoggedIn(true);
+      //         setCurrentUser(userData);
+      //       }
+      //     }
+      //   } catch (err) {
+      //     console.log(err);
+      //     handleError(err);
+      //   } finally {
+      //     setIsPageLoading(false);
+      //   }
+      // };
+      // validateToken();
+      mainApi.getToken();
+    if(isLoggedIn) {
+      mainApi.getAllNeededData()
+        .then(([userInfo, savedByUserMovies]) => {
+          setCurrentUser(userInfo);
+          setSavedInitialMovies(savedByUserMovies);
+        })
+        .catch((err) => {
           console.log(err);
-          handleError(err);
-        } finally {
-          setIsPageLoading(false);
-        }
-      };
-      validateToken();
-    }, [handleError]);
+        })
+    }
+    }, [isLoggedIn]);
 
   // useEffect(() => {
   //   mainApi.getToken();
