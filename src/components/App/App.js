@@ -243,6 +243,28 @@ const handleLogin = async ({ email, password }) => {
   // } finally {
   //   setIsLoginLoading(false); // Скрываем лоадер после завершения операции входа
   // }
+
+  mainApi.loginUser({ email, password })
+  .then((res) => {
+    localStorage.setItem('jwt', res.token);
+    setIsLoggedIn(true); // Устанавливаем флаг "пользователь вошел в систему"
+    setCurrentUser({
+      email: res.email,
+      name: res.name
+    });
+    const registerTrue = localStorage.getItem('registerTrue');
+    console.log('registerTrue: ', registerTrue);
+    localStorage.setItem('loginTrue', 'true'); // Сохраняем информацию о входе в локальное хранилище
+    navigate('/movies');
+  })
+  .catch((err) => {
+    console.log(err); // Логируем ошибку, если вход не удался
+    handleError(err); // Обрабатываем ошибку входа
+    setIsLoggedIn(false); // Устанавливаем флаг "пользователь не вошел в систему"
+  })
+  .finally(() => {
+    setIsLoginLoading(false); // Скрываем лоадер после завершения операции входа
+  })
 };
 
   // Обработчик регистрации
@@ -262,7 +284,7 @@ const handleLogin = async ({ email, password }) => {
     // } finally {
     //   setIsRegisterLoading(false); // Скрываем лоадер после завершения операции
     // }
-    mainApi.register({ email, password, name })
+    mainApi.registerUser({ name, email, password })
     .then(() => {
       handleLogin({email, password});
       localStorage.setItem('registerTrue: ', 'true'); // Сохраняем информацию о регистрации в локальное хранилище
