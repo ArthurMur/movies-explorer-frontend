@@ -355,19 +355,29 @@ const handleLogin = async ({ email, password }) => {
 
   // Эффект для фильтрации сохраненных фильмов по продолжительности при изменении соответствующего стейта.
   useEffect(() => {
-    // Проверяем, сохранена ли информация о фильтрации в локальном хранилище
-    const isFilterChecked = localStorage.getItem('checked-save') === 'true';
-    console.log('isFilterChecked: ', isFilterChecked);
-
-    // Фильтруем список сохраненных фильмов в зависимости от значения isFilterChecked
-    const filteredMovies = isFilterChecked
-      ? savedInitialMovies.filter((movie) => movie.duration <= SHORT_MOVIE_DURATION)
-      : savedInitialMovies;
-    console.log('filteredMovies: ', filteredMovies);
-
-    // Обновляем состояние с отфильтрованным списком
-    setSavedFilteredInitialMovies(filteredMovies);
+    if (localStorage.getItem('checked-save') === 'true') {
+      const filteredMovies = savedInitialMovies.filter(
+        (movie) => movie.duration <= SHORT_MOVIE_DURATION,
+      );
+      setSavedFilteredInitialMovies(filteredMovies);
+    } else {
+      setSavedFilteredInitialMovies(savedInitialMovies);
+    }
   }, [savedInitialMovies]);
+  // useEffect(() => {
+  //   // Проверяем, сохранена ли информация о фильтрации в локальном хранилище
+  //   const isFilterChecked = localStorage.getItem('checked-save') === 'true';
+  //   console.log('isFilterChecked: ', isFilterChecked);
+
+  //   // Фильтруем список сохраненных фильмов в зависимости от значения isFilterChecked
+  //   const filteredMovies = isFilterChecked
+  //     ? savedInitialMovies.filter((movie) => movie.duration <= SHORT_MOVIE_DURATION)
+  //     : savedInitialMovies;
+  //   console.log('filteredMovies: ', filteredMovies);
+
+  //   // Обновляем состояние с отфильтрованным списком
+  //   setSavedFilteredInitialMovies(filteredMovies);
+  // }, [savedInitialMovies]);
 
   // Обработчик удаления фильма
   const handleDeleteClick = async (movieId) => {
