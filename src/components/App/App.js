@@ -12,7 +12,6 @@ import Register from '../Register/Register';
 import Movies from '../Movies/Movies';
 import SavedMovies from '../SavedMovies/SavedMovies';
 import Profile from '../Profile/Profile';
-import Preloader from '../Preloader/Preloader';
 import NotFound from '../NotFound/NotFound';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
@@ -87,18 +86,20 @@ function App() {
       // };
       // validateToken();
       mainApi.getToken();
-      const loginTrue = localStorage.getItem('loginTrue');
-    if(loginTrue) {
+      const jwt = localStorage.getItem('jwt');
+    if(jwt) {
       mainApi.getAllNeededData()
         .then(([userInfo, savedByUserMovies]) => {
+          setIsLoggedIn(true);
           setCurrentUser(userInfo);
           setSavedInitialMovies(savedByUserMovies);
         })
         .catch((err) => {
           console.log(err);
+          handleError(err);
         })
     }
-    }, [isLoggedIn]);
+    }, [isLoggedIn, handleError]);
 
   // useEffect(() => {
   //   mainApi.getToken();
