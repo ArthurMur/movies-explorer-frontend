@@ -357,11 +357,13 @@ const handleLogin = async ({ email, password }) => {
   useEffect(() => {
     // Проверяем, сохранена ли информация о фильтрации в локальном хранилище
     const isFilterChecked = localStorage.getItem('checked-save') === 'true';
+    console.log('isFilterChecked: ', isFilterChecked);
 
     // Фильтруем список сохраненных фильмов в зависимости от значения isFilterChecked
     const filteredMovies = isFilterChecked
       ? savedInitialMovies.filter((movie) => movie.duration <= SHORT_MOVIE_DURATION)
       : savedInitialMovies;
+    console.log('filteredMovies: ', filteredMovies);
 
     // Обновляем состояние с отфильтрованным списком
     setSavedFilteredInitialMovies(filteredMovies);
@@ -406,8 +408,11 @@ const handleLogin = async ({ email, password }) => {
       // Обрабатываем фильтрацию для сохраненных фильмов, если есть
       localStorage.setItem('checked-save', checked);
       const foundMoviesInLs = JSON.parse(localStorage.getItem('saved-movies'));
+      console.log('foundMoviesInLs: ', foundMoviesInLs);
+      console.log('checked: ', checked);
       if (checked) {
         const filteredSavedMovies = filterMoviesByDuration(foundMoviesInLs, duration);
+        console.log('filteredSavedMovies: ', filteredSavedMovies);
         setSavedInitialMovies(filteredSavedMovies);
       } else {
         setSavedInitialMovies(foundMoviesInLs || []);
