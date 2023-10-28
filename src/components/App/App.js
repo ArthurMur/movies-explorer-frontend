@@ -87,7 +87,8 @@ function App() {
       // };
       // validateToken();
       mainApi.getToken();
-    if(isLoggedIn) {
+      const loginTrue = localStorage.getItem('loginTrue');
+    if(loginTrue) {
       mainApi.getAllNeededData()
         .then(([userInfo, savedByUserMovies]) => {
           setCurrentUser(userInfo);
