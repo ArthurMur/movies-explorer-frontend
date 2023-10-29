@@ -352,7 +352,6 @@ const handleLogin = async ({ email, password }) => {
       handleError(err);
     }
   };
-
   // // Эффект для фильтрации сохраненных фильмов по продолжительности при изменении соответствующего стейта.
   // useEffect(() => {
   //   if (localStorage.getItem('checked-save') === 'true') {
