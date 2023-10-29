@@ -457,27 +457,26 @@ const handleLogin = async ({ email, password }) => {
 
 // Обработчик фильтрации коротких сохраненных фильмов
 const handleFilterShortSavedMovies = (searchQuery, checked) => {
-  // Получаем сохраненные фильмы из локального хранилища
   const foundMoviesInLs = JSON.parse(localStorage.getItem('saved-movies'));
-
   let filteredMovies = foundMoviesInLs ? foundMoviesInLs : [];
 
-  // Фильтрация по поисковому запросу
   if (searchQuery) {
     filteredMovies = filteredMovies.filter(movie =>
-      movie.nameRU.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      movie.nameEN.toLowerCase().includes(searchQuery.toLowerCase())
+      movie.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }
 
-  // Фильтрация по короткометражным фильмам, если флаг установлен
   if (checked) {
     filteredMovies = filteredMovies.filter(movie => movie.duration <= SHORT_MOVIE_DURATION);
   }
 
-  // Устанавливаем отфильтрованные сохраненные фильмы в состояние savedFilteredInitialMovies
   setSavedFilteredInitialMovies(filteredMovies);
 };
+
+// Используйте эту функцию там, где происходит обновление фильтрации.
+// Например, при изменении состояний поиска и чекбокса коротких фильмов.
+handleFilterShortSavedMovies(searchQuery, checked);
+
 
 
 // const handleFilterShortSavedMovies = (checked) => {
