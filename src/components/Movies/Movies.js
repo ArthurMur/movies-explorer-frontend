@@ -60,16 +60,18 @@ function Movies({
 
   // Устанавливаем количество фильмов для отображения в зависимости от isSearched и ширины экрана
   useEffect(() => {
+    const baseCount = getBaseCount();
+    const searchCount = baseCount > NUMBER_CARDS_FOR_MOBILE ? NUMBER_CARDS_FOR_MOBILE : baseCount;
+
     if (isSearched) {
-      const baseCount = getBaseCount();
-      setShowMoviesLength(baseCount > NUMBER_CARDS_FOR_MOBILE ? NUMBER_CARDS_FOR_MOBILE : baseCount);
+      setShowMoviesLength(searchCount);
       setAddMoviesCount(getAddCount());
     } else {
-      const baseCount = getBaseCount();
-      setShowMoviesLength(baseCount > NUMBER_CARDS_FOR_MOBILE ? NUMBER_CARDS_FOR_MOBILE : baseCount);
+      setShowMoviesLength(searchCount);
       setAddMoviesCount(getAddCount());
     }
   }, [isSearched, getBaseCount, getAddCount]);
+
 
   
   // Фильтрация списка фильмов для отображения на основе showMoviesLength
