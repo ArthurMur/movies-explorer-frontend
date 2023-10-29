@@ -404,7 +404,7 @@ const handleLogin = async ({ email, password }) => {
     } else {
       setSavedFilteredInitialMovies(savedInitialMovies);
     }
-  }, [savedInitialMovies]);
+  }, [savedInitialMovies, savedFilteredInitialMovies]);
   // useEffect(() => {
   //   // Проверяем, сохранена ли информация о фильтрации в локальном хранилище
   //   const isFilterChecked = localStorage.getItem('checked-save') === 'true';
