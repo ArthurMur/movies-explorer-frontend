@@ -404,7 +404,7 @@ const handleLogin = async ({ email, password }) => {
     } else {
       setSavedFilteredInitialMovies(savedInitialMovies);
     }
-  }, [savedInitialMovies, savedFilteredInitialMovies]);
+  }, [savedInitialMovies]);
   // useEffect(() => {
   //   // Проверяем, сохранена ли информация о фильтрации в локальном хранилище
   //   const isFilterChecked = localStorage.getItem('checked-save') === 'true';
@@ -456,24 +456,46 @@ const handleLogin = async ({ email, password }) => {
   };
 
 // Обработчик фильтрации коротких сохраненных фильмов
-const handleFilterShortSavedMovies = (checked) => {
+const handleFilterShortSavedMovies = (checked, searchQuery) => {
   // Сохраняем состояние чекбокса "Показать только короткометражки" в локальное хранилище
   localStorage.setItem('checked-save', checked);
 
   // Получаем сохраненные фильмы из локального хранилища
   const foundMoviesInLs = JSON.parse(localStorage.getItem('saved-movies'));
 
-  // Если чекбокс "Показать только короткометражки" отмечен
-  if (checked) {
-    // Фильтрация сохраненных фильмов: оставляем только те, чья длительность меньше или равна SHORT_MOVIE_DURATION
-    const filteredMovies = foundMoviesInLs.filter((movie) => movie.duration <= SHORT_MOVIE_DURATION);
-    // Устанавливаем отфильтрованные сохраненные фильмы в состояние savedFilteredInitialMovies
-    setSavedFilteredInitialMovies(filteredMovies);
-  } else {
-    // Если чекбокс не отмечен, восстанавливаем изначальные сохраненные фильмы
-    setSavedInitialMovies(foundMoviesInLs ? foundMoviesInLs : []);
+  // Применяем фильтрацию по запросу и коротким фильмам
+  let filteredMovies = foundMoviesInLs ? foundMoviesInLs : [];
+
+  if (searchQuery) {
+    filteredMovies = filteredMovies.filter(movie => movie.title.toLowerCase().includes(searchQuery.toLowerCase()));
   }
+
+  if (checked) {
+    filteredMovies = filteredMovies.filter(movie => movie.duration <= SHORT_MOVIE_DURATION);
+  }
+
+  // Устанавливаем отфильтрованные сохраненные фильмы в состояние savedFilteredInitialMovies
+  setSavedFilteredInitialMovies(filteredMovies);
 };
+
+// const handleFilterShortSavedMovies = (checked) => {
+//   // Сохраняем состояние чекбокса "Показать только короткометражки" в локальное хранилище
+//   localStorage.setItem('checked-save', checked);
+
+//   // Получаем сохраненные фильмы из локального хранилища
+//   const foundMoviesInLs = JSON.parse(localStorage.getItem('saved-movies'));
+
+//   // Если чекбокс "Показать только короткометражки" отмечен
+//   if (checked) {
+//     // Фильтрация сохраненных фильмов: оставляем только те, чья длительность меньше или равна SHORT_MOVIE_DURATION
+//     const filteredMovies = foundMoviesInLs.filter((movie) => movie.duration <= SHORT_MOVIE_DURATION);
+//     // Устанавливаем отфильтрованные сохраненные фильмы в состояние savedFilteredInitialMovies
+//     setSavedFilteredInitialMovies(filteredMovies);
+//   } else {
+//     // Если чекбокс не отмечен, восстанавливаем изначальные сохраненные фильмы
+//     setSavedInitialMovies(foundMoviesInLs ? foundMoviesInLs : []);
+//   }
+// };
 
   // // Функция для фильтрации фильмов по продолжительности
   // const filterMoviesByDuration = (movies, duration) => {
