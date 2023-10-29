@@ -66,6 +66,12 @@ function Movies({
       const baseCount = getBaseCount();
       setShowMoviesLength(baseCount > NUMBER_CARDS_FOR_MOBILE ? NUMBER_CARDS_FOR_MOBILE : baseCount);
     }
+
+    // Сбросить состояние showMoviesLength при начале нового поиска
+    if (isSearched) {
+      setShowMoviesLength(getBaseCount());
+    }
+
     setAddMoviesCount(getAddCount());
   }, [isSearched, getBaseCount, getAddCount]);
   
