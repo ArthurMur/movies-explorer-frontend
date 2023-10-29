@@ -465,7 +465,8 @@ const handleFilterShortSavedMovies = (searchQuery, checked) => {
   // Фильтрация по поисковому запросу
   if (searchQuery) {
     filteredMovies = filteredMovies.filter(movie =>
-      movie.title.toLowerCase().includes(searchQuery.toLowerCase())
+      movie.nameRU.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      movie.nameEN.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }
 
