@@ -353,17 +353,46 @@ const handleLogin = async ({ email, password }) => {
     }
   };
 
+  // // Эффект для фильтрации сохраненных фильмов по продолжительности при изменении соответствующего стейта.
+  // useEffect(() => {
+  //   if (localStorage.getItem('checked-save') === 'true') {
+  //     const filteredMovies = savedInitialMovies.filter(
+  //       (movie) => movie.duration <= SHORT_MOVIE_DURATION,
+  //     );
+  //     setSavedFilteredInitialMovies(filteredMovies);
+  //   } else {
+  //     setSavedFilteredInitialMovies(savedInitialMovies);
+  //   }
+  // }, [savedInitialMovies]);
+
   // Эффект для фильтрации сохраненных фильмов по продолжительности при изменении соответствующего стейта.
   useEffect(() => {
     if (localStorage.getItem('checked-save') === 'true') {
-      const filteredMovies = savedInitialMovies.filter(
-        (movie) => movie.duration <= SHORT_MOVIE_DURATION,
-      );
-      setSavedFilteredInitialMovies(filteredMovies);
+      if (isSearched) {
+        const filteredMovies = savedInitialMovies.filter(
+          (movie) => movie.duration <= SHORT_MOVIE_DURATION
+        );
+        setSavedFilteredInitialMovies(filteredMovies);
+      } else {
+        const filteredMovies = savedInitialMovies.filter(
+          (movie) => movie.duration <= SHORT_MOVIE_DURATION
+        );
+        setSavedFilteredInitialMovies(filteredMovies);
+      }
     } else {
-      setSavedFilteredInitialMovies(savedInitialMovies);
+      if (isSearched) {
+        // Если выполнен поиск, отобразить сохраненные фильмы без фильтрации по продолжительности
+        setSavedFilteredInitialMovies(savedInitialMovies);
+      } else {
+        // Если поиск не выполнялся, отобразить сохраненные фильмы с учетом фильтрации
+        const filteredMovies = savedInitialMovies.filter(
+          (movie) => movie.duration <= SHORT_MOVIE_DURATION
+        );
+        setSavedFilteredInitialMovies(filteredMovies);
+      }
     }
-  }, [savedInitialMovies]);
+  }, [savedInitialMovies, isSearched]);
+  
   // useEffect(() => {
   //   // Проверяем, сохранена ли информация о фильтрации в локальном хранилище
   //   const isFilterChecked = localStorage.getItem('checked-save') === 'true';
