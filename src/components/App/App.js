@@ -142,31 +142,35 @@ function App() {
   
     return shortMovies;
   };
-  
-  // Обработчик фильтрации данных фильмов
+
   const handleFilterMoviesData = useCallback(async (search, isChecked) => {
-    // Устанавливаем флаг поиска
-    setIsSearched(true);
     // Получение данных из локального хранилища
     const savedInLs = localStorage.getItem('movies');
     const savedData = savedInLs ? JSON.parse(savedInLs) : null;
-
+  
     // Если данных нет, показать лоадер
     if (!savedData) {
       setIsMoviesLoading(true);
     }
-
+  
     try {
-      // Если данные не были загружены, получить их с сервера
-      const moviesData = savedData || await moviesApi.getMovies();
-      // Сохранить данные в хранилище
-      localStorage.setItem('movies', JSON.stringify(moviesData));
-
-      // Фильтруем данные
-      const newInitialMovies = filterMovies(moviesData, search, isChecked);
-      // Сохраняем отфильтрованный список
-      localStorage.setItem('found-movies', JSON.stringify(newInitialMovies));
-
+      let newInitialMovies;
+  
+      if (isChecked) {
+        // Если флаг isChecked установлен, фильтруем фильмы
+        newInitialMovies = savedData || [];
+        newInitialMovies = filterMovies(newInitialMovies, search, isChecked);
+        setIsSearched(true); // Устанавливаем флаг поиска
+      } else {
+        // Если флаг isChecked не установлен, получаем данные с сервера и фильтруем их
+        const moviesData = savedData || await moviesApi.getMovies();
+        localStorage.setItem('movies', JSON.stringify(moviesData));
+  
+        newInitialMovies = filterMovies(moviesData, search, isChecked);
+        localStorage.setItem('found-movies', JSON.stringify(newInitialMovies));
+        setIsSearched(true); // Устанавливаем флаг поиска
+      }
+  
       // Обновляем стейт с отфильтрованным списком фильмов
       setInitialMovies(newInitialMovies);
     } catch (err) {
@@ -176,7 +180,43 @@ function App() {
       // Скрываем лоадер
       setIsMoviesLoading(false);
     }
-  }, []);
+  }, [setIsMoviesLoading, setInitialMovies]);
+  
+  
+  // // Обработчик фильтрации данных фильмов
+  // const handleFilterMoviesData = useCallback(async (search, isChecked) => {
+  //   // Устанавливаем флаг поиска
+  //   setIsSearched(true);
+  //   // Получение данных из локального хранилища
+  //   const savedInLs = localStorage.getItem('movies');
+  //   const savedData = savedInLs ? JSON.parse(savedInLs) : null;
+
+  //   // Если данных нет, показать лоадер
+  //   if (!savedData) {
+  //     setIsMoviesLoading(true);
+  //   }
+
+  //   try {
+  //     // Если данные не были загружены, получить их с сервера
+  //     const moviesData = savedData || await moviesApi.getMovies();
+  //     // Сохранить данные в хранилище
+  //     localStorage.setItem('movies', JSON.stringify(moviesData));
+
+  //     // Фильтруем данные
+  //     const newInitialMovies = filterMovies(moviesData, search, isChecked);
+  //     // Сохраняем отфильтрованный список
+  //     localStorage.setItem('found-movies', JSON.stringify(newInitialMovies));
+
+  //     // Обновляем стейт с отфильтрованным списком фильмов
+  //     setInitialMovies(newInitialMovies);
+  //   } catch (err) {
+  //     console.log(err);
+  //     setIsSuccess(false);
+  //   } finally {
+  //     // Скрываем лоадер
+  //     setIsMoviesLoading(false);
+  //   }
+  // }, []);
 
   // Получение данных о фильмах
   const getMovies = useCallback(async () => {
@@ -352,46 +392,18 @@ const handleLogin = async ({ email, password }) => {
       handleError(err);
     }
   };
-  // // Эффект для фильтрации сохраненных фильмов по продолжительности при изменении соответствующего стейта.
-  // useEffect(() => {
-  //   if (localStorage.getItem('checked-save') === 'true') {
-  //     const filteredMovies = savedInitialMovies.filter(
-  //       (movie) => movie.duration <= SHORT_MOVIE_DURATION,
-  //     );
-  //     setSavedFilteredInitialMovies(filteredMovies);
-  //   } else {
-  //     setSavedFilteredInitialMovies(savedInitialMovies);
-  //   }
-  // }, [savedInitialMovies]);
 
   // Эффект для фильтрации сохраненных фильмов по продолжительности при изменении соответствующего стейта.
   useEffect(() => {
     if (localStorage.getItem('checked-save') === 'true') {
-      if (isSearched) {
-        const filteredMovies = savedInitialMovies.filter(
-          (movie) => movie.duration <= SHORT_MOVIE_DURATION
-        );
-        setSavedFilteredInitialMovies(filteredMovies);
-      } else {
-        const filteredMovies = savedInitialMovies.filter(
-          (movie) => movie.duration <= SHORT_MOVIE_DURATION
-        );
-        setSavedFilteredInitialMovies(filteredMovies);
-      }
+      const filteredMovies = savedInitialMovies.filter(
+        (movie) => movie.duration <= SHORT_MOVIE_DURATION,
+      );
+      setSavedFilteredInitialMovies(filteredMovies);
     } else {
-      if (isSearched) {
-        // Если выполнен поиск, отобразить сохраненные фильмы без фильтрации по продолжительности
-        setSavedFilteredInitialMovies(savedInitialMovies);
-      } else {
-        // Если поиск не выполнялся, отобразить сохраненные фильмы с учетом фильтрации
-        const filteredMovies = savedInitialMovies.filter(
-          (movie) => movie.duration <= SHORT_MOVIE_DURATION
-        );
-        setSavedFilteredInitialMovies(filteredMovies);
-      }
+      setSavedFilteredInitialMovies(savedInitialMovies);
     }
-  }, [savedInitialMovies, isSearched]);
-  
+  }, [savedInitialMovies]);
   // useEffect(() => {
   //   // Проверяем, сохранена ли информация о фильтрации в локальном хранилище
   //   const isFilterChecked = localStorage.getItem('checked-save') === 'true';
