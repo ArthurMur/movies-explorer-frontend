@@ -463,17 +463,46 @@ const handleFilterShortSavedMovies = (checked) => {
   // Получаем сохраненные фильмы из локального хранилища
   const foundMoviesInLs = JSON.parse(localStorage.getItem('saved-movies'));
 
-  // Если чекбокс "Показать только короткометражки" отмечен
   if (checked) {
-    // Фильтрация сохраненных фильмов: оставляем только те, чья длительность меньше или равна SHORT_MOVIE_DURATION
-    const filteredMovies = foundMoviesInLs.filter((movie) => movie.duration <= SHORT_MOVIE_DURATION);
-    // Устанавливаем отфильтрованные сохраненные фильмы в состояние savedFilteredInitialMovies
-    setSavedFilteredInitialMovies(filteredMovies);
+    if (isSearched) {
+      // Если был поиск, фильтруем найденные фильмы с учётом короткометражности
+      const filteredSearchedMovies = foundMoviesInLs.filter(movie => movie.duration <= SHORT_MOVIE_DURATION);
+      setSavedFilteredInitialMovies(filteredSearchedMovies);
+    } else {
+      // Если не было поиска, фильтруем все сохраненные фильмы
+      const filteredMovies = foundMoviesInLs.filter(movie => movie.duration <= SHORT_MOVIE_DURATION);
+      setSavedFilteredInitialMovies(filteredMovies);
+    }
   } else {
-    // Если чекбокс не отмечен, восстанавливаем изначальные сохраненные фильмы
-    setSavedInitialMovies(foundMoviesInLs ? foundMoviesInLs : []);
+    if (isSearched) {
+      // Если был поиск, отображаем отфильтрованные фильмы по предыдущему поиску
+      const searchedMovies = foundMoviesInLs;
+      setSavedFilteredInitialMovies(searchedMovies);
+    } else {
+      // Если не было поиска, отображаем все сохраненные фильмы
+      setSavedFilteredInitialMovies(foundMoviesInLs);
+    }
   }
 };
+
+// const handleFilterShortSavedMovies = (checked) => {
+//   // Сохраняем состояние чекбокса "Показать только короткометражки" в локальное хранилище
+//   localStorage.setItem('checked-save', checked);
+
+//   // Получаем сохраненные фильмы из локального хранилища
+//   const foundMoviesInLs = JSON.parse(localStorage.getItem('saved-movies'));
+
+//   // Если чекбокс "Показать только короткометражки" отмечен
+//   if (checked) {
+//     // Фильтрация сохраненных фильмов: оставляем только те, чья длительность меньше или равна SHORT_MOVIE_DURATION
+//     const filteredMovies = foundMoviesInLs.filter((movie) => movie.duration <= SHORT_MOVIE_DURATION);
+//     // Устанавливаем отфильтрованные сохраненные фильмы в состояние savedFilteredInitialMovies
+//     setSavedFilteredInitialMovies(filteredMovies);
+//   } else {
+//     // Если чекбокс не отмечен, восстанавливаем изначальные сохраненные фильмы
+//     setSavedInitialMovies(foundMoviesInLs ? foundMoviesInLs : []);
+//   }
+// };
 
   // // Функция для фильтрации фильмов по продолжительности
   // const filterMoviesByDuration = (movies, duration) => {
