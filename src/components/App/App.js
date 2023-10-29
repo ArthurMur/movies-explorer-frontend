@@ -456,47 +456,24 @@ const handleLogin = async ({ email, password }) => {
   };
 
 // Обработчик фильтрации коротких сохраненных фильмов
-const handleFilterShortSavedMovies = (searchQuery, checked) => {
+const handleFilterShortSavedMovies = (checked) => {
+  // Сохраняем состояние чекбокса "Показать только короткометражки" в локальное хранилище
+  localStorage.setItem('checked-save', checked);
+
+  // Получаем сохраненные фильмы из локального хранилища
   const foundMoviesInLs = JSON.parse(localStorage.getItem('saved-movies'));
-  let filteredMovies = foundMoviesInLs ? foundMoviesInLs : [];
 
-  if (searchQuery) {
-    filteredMovies = filteredMovies.filter(movie =>
-      movie.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }
-
+  // Если чекбокс "Показать только короткометражки" отмечен
   if (checked) {
-    filteredMovies = filteredMovies.filter(movie => movie.duration <= SHORT_MOVIE_DURATION);
+    // Фильтрация сохраненных фильмов: оставляем только те, чья длительность меньше или равна SHORT_MOVIE_DURATION
+    const filteredMovies = foundMoviesInLs.filter((movie) => movie.duration <= SHORT_MOVIE_DURATION);
+    // Устанавливаем отфильтрованные сохраненные фильмы в состояние savedFilteredInitialMovies
+    setSavedFilteredInitialMovies(filteredMovies);
+  } else {
+    // Если чекбокс не отмечен, восстанавливаем изначальные сохраненные фильмы
+    setSavedInitialMovies(foundMoviesInLs ? foundMoviesInLs : []);
   }
-
-  setSavedFilteredInitialMovies(filteredMovies);
 };
-
-// Используйте эту функцию там, где происходит обновление фильтрации.
-// Например, при изменении состояний поиска и чекбокса коротких фильмов.
-handleFilterShortSavedMovies(searchQuery, checked);
-
-
-
-// const handleFilterShortSavedMovies = (checked) => {
-//   // Сохраняем состояние чекбокса "Показать только короткометражки" в локальное хранилище
-//   localStorage.setItem('checked-save', checked);
-
-//   // Получаем сохраненные фильмы из локального хранилища
-//   const foundMoviesInLs = JSON.parse(localStorage.getItem('saved-movies'));
-
-//   // Если чекбокс "Показать только короткометражки" отмечен
-//   if (checked) {
-//     // Фильтрация сохраненных фильмов: оставляем только те, чья длительность меньше или равна SHORT_MOVIE_DURATION
-//     const filteredMovies = foundMoviesInLs.filter((movie) => movie.duration <= SHORT_MOVIE_DURATION);
-//     // Устанавливаем отфильтрованные сохраненные фильмы в состояние savedFilteredInitialMovies
-//     setSavedFilteredInitialMovies(filteredMovies);
-//   } else {
-//     // Если чекбокс не отмечен, восстанавливаем изначальные сохраненные фильмы
-//     setSavedInitialMovies(foundMoviesInLs ? foundMoviesInLs : []);
-//   }
-// };
 
   // // Функция для фильтрации фильмов по продолжительности
   // const filterMoviesByDuration = (movies, duration) => {
