@@ -57,27 +57,6 @@ function Movies({
     },
     [screenWidth],
   );
-
-  // Устанавливаем количество фильмов для отображения в зависимости от isSearched и ширины экрана
-  useEffect(() => {
-    const handleSearch = () => {
-      const baseCount = getBaseCount();
-      setShowMoviesLength(baseCount);
-      setAddMoviesCount(getAddCount());
-    };
-
-    // Обновление при поиске
-    if (isSearched) {
-      handleSearch();
-    } else { // Обновление при сбросе поиска
-      const baseCount = getBaseCount();
-      setShowMoviesLength(baseCount > NUMBER_CARDS_FOR_MOBILE ? NUMBER_CARDS_FOR_MOBILE : baseCount);
-      setAddMoviesCount(getAddCount());
-    }
-  }, [isSearched, getBaseCount, getAddCount]);
-
-
-
   
   // Фильтрация списка фильмов для отображения на основе showMoviesLength
   const cards = useMemo(
