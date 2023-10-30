@@ -117,18 +117,23 @@ function App() {
 
   // Фильтруем фильмы
   const filterMovies = (movies, search, isChecked) => {
-    const filteredBySearch = movies.filter(movie =>
-      movie.nameRU.toLowerCase().includes(search.toLowerCase()) ||
-      movie.nameEN.toLowerCase().includes(search.toLowerCase())
-    );
+    const lowerCaseSearch = search.toLowerCase();
+    
+    const filteredMovies = movies.filter(movie => {
+      const containsSearch = 
+        movie.nameRU.toLowerCase().includes(lowerCaseSearch) ||
+        movie.nameEN.toLowerCase().includes(lowerCaseSearch);
   
-    if (!isChecked) {
-      return filteredBySearch;
-    }
+      if (isChecked) {
+        return containsSearch && movie.duration <= SHORT_MOVIE_DURATION;
+      } else {
+        return containsSearch;
+      }
+    });
   
-    const shortMovies = filteredBySearch.filter(movie => movie.duration <= SHORT_MOVIE_DURATION);
-    return shortMovies;
+    return filteredMovies;
   };
+  
   
   // Обработчик фильтрации данных фильмов
   const handleFilterMoviesData = useCallback(async (search, isChecked) => {
