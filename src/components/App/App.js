@@ -37,6 +37,7 @@ function App() {
   const [tooltipMessage, setTooltipMessage] = useState(''); // Состояние, содержащее сообщение во всплывающем окне (тултипе)
   const [isTooltipSuccess, setIsTooltipSuccess] = useState(true); // Состояние, определяющее, успешно ли выполнена операция во всплывающем окне (тултипе)
   const [searchQuery, setSearchQuery] = useState(''); // Объявление состояния для хранения поискового запроса при включенном чекбоксе
+  const [shortMoviesChecked, setShortMoviesChecked] = useState(false);
 
   const { pathname } = useLocation(); // Текущий путь
   const navigate = useNavigate(); // Хук для перенаправления
@@ -444,20 +445,20 @@ const handleFilterShortMovies = (checked, search, isChecked) => {
   if (checked) {
     const filteredShortMovies = initialMovies.filter((movie) => movie.duration <= SHORT_MOVIE_DURATION);
     setInitialMovies(filteredShortMovies);
-    
-    // Сохраняем поисковый запрос при включенном чекбоксе
-    setSearchQuery(search);
+    setShortMoviesChecked(true); // Установка состояния чекбокса
+    setSearchQuery(search); // Сохранение поискового запроса
   } else {
-    if (!isChecked) {
-      const foundMoviesInLs = JSON.parse(localStorage.getItem('found-movies'));
-      setInitialMovies(foundMoviesInLs ? foundMoviesInLs : []);
-    } else {
-      // При выключенном чекбоксе используем сохранённый поисковый запрос
+    setShortMoviesChecked(false); // Сброс состояния чекбокса
+    if (!isChecked && searchQuery) {
       const allMovies = filterMovies(initialMovies, searchQuery, isChecked);
       setInitialMovies(allMovies);
+    } else {
+      // Если isChecked не установлен или поисковый запрос пуст, восстанавливаем список фильмов
+      const foundMoviesInLs = JSON.parse(localStorage.getItem('found-movies'));
+      setInitialMovies(foundMoviesInLs ? foundMoviesInLs : []);
     }
   }
-}
+};
 
   
 
