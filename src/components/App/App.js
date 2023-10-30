@@ -163,10 +163,16 @@ function App() {
         filteredMovies = filterMovies(moviesData, search, isChecked);
       } else {
         // Если флаг isChecked не установлен, фильтруем фильмы только по поисковому запросу
-        filteredMovies = filterMovies(moviesData, search, isChecked);
+        filteredMovies = moviesData.filter(movie => {
+          // Фильтрация по поисковому запросу, если он не пустой
+          if (search.trim() !== '') {
+            return movie.title.toLowerCase().includes(search.toLowerCase());
+          } else {
+            return true; // Возвращаем все фильмы, если поисковый запрос пустой
+          }
+        });
       }
   
-      localStorage.setItem('found-movies', JSON.stringify(filteredMovies));
       setInitialMovies(filteredMovies);
       setIsSearched(true); // Устанавливаем флаг поиска
     } catch (err) {
@@ -176,6 +182,7 @@ function App() {
       setIsMoviesLoading(false); // Скрываем лоадер после завершения запроса
     }
   }, [setIsMoviesLoading, setInitialMovies]);
+  
   
   
   
