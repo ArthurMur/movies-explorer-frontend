@@ -145,85 +145,43 @@ function App() {
   
   // Обработчик фильтрации данных фильмов
   const handleFilterMoviesData = useCallback(async (search, isChecked) => {
-    setIsMoviesLoading(true); // Показываем лоадер при начале запроса
+    // Получение данных из локального хранилища
+    const savedInLs = localStorage.getItem('movies');
+    const savedData = savedInLs ? JSON.parse(savedInLs) : null;
+  
+    // Если данных нет, показать лоадер
+    if (!savedData) {
+      setIsMoviesLoading(true);
+    }
   
     try {
-      let moviesData = JSON.parse(localStorage.getItem('movies')) || [];
-  
-      if (!moviesData.length) {
-        // Если данных нет в локальном хранилище, получаем данные с сервера
-        moviesData = await moviesApi.getMovies();
-        localStorage.setItem('movies', JSON.stringify(moviesData));
-      }
-  
-      let filteredMovies = moviesData;
+      let newInitialMovies;
   
       if (isChecked) {
-        // Если флаг isChecked установлен, фильтруем фильмы по условию короткометражки
-        filteredMovies = filterMovies(moviesData, search, isChecked);
+        // Если флаг isChecked установлен, фильтруем фильмы
+        newInitialMovies = savedData || [];
+        newInitialMovies = filterMovies(newInitialMovies, search, isChecked);
+        setIsSearched(true); // Устанавливаем флаг поиска
       } else {
-        // Если флаг isChecked не установлен, фильтруем фильмы только по поисковому запросу
-        filteredMovies = moviesData.filter(movie => {
-          // Фильтрация по поисковому запросу, если он не пустой
-          if (search.trim() !== '') {
-            return movie.title.toLowerCase().includes(search.toLowerCase());
-          } else {
-            return true; // Возвращаем все фильмы, если поисковый запрос пустой
-          }
-        });
+        // Если флаг isChecked не установлен, получаем данные с сервера и фильтруем их
+        const moviesData = savedData || await moviesApi.getMovies();
+        localStorage.setItem('movies', JSON.stringify(moviesData));
+  
+        newInitialMovies = filterMovies(moviesData, search, isChecked);
+        localStorage.setItem('found-movies', JSON.stringify(newInitialMovies));
+        setIsSearched(true); // Устанавливаем флаг поиска
       }
   
-      setInitialMovies(filteredMovies);
-      setIsSearched(true); // Устанавливаем флаг поиска
+      // Обновляем стейт с отфильтрованным списком фильмов
+      setInitialMovies(newInitialMovies);
     } catch (err) {
       console.log(err);
       setIsSuccess(false);
     } finally {
-      setIsMoviesLoading(false); // Скрываем лоадер после завершения запроса
+      // Скрываем лоадер
+      setIsMoviesLoading(false);
     }
   }, [setIsMoviesLoading, setInitialMovies]);
-  
-  
-  
-  
-  // const handleFilterMoviesData = useCallback(async (search, isChecked) => {
-  //   // Получение данных из локального хранилища
-  //   const savedInLs = localStorage.getItem('movies');
-  //   const savedData = savedInLs ? JSON.parse(savedInLs) : null;
-  
-  //   // Если данных нет, показать лоадер
-  //   if (!savedData) {
-  //     setIsMoviesLoading(true);
-  //   }
-  
-  //   try {
-  //     let newInitialMovies;
-  
-  //     if (isChecked) {
-  //       // Если флаг isChecked установлен, фильтруем фильмы
-  //       newInitialMovies = savedData || [];
-  //       newInitialMovies = filterMovies(newInitialMovies, search, isChecked);
-  //       setIsSearched(true); // Устанавливаем флаг поиска
-  //     } else {
-  //       // Если флаг isChecked не установлен, получаем данные с сервера и фильтруем их
-  //       const moviesData = savedData || await moviesApi.getMovies();
-  //       localStorage.setItem('movies', JSON.stringify(moviesData));
-  
-  //       newInitialMovies = filterMovies(moviesData, search, isChecked);
-  //       localStorage.setItem('found-movies', JSON.stringify(newInitialMovies));
-  //       setIsSearched(true); // Устанавливаем флаг поиска
-  //     }
-  
-  //     // Обновляем стейт с отфильтрованным списком фильмов
-  //     setInitialMovies(newInitialMovies);
-  //   } catch (err) {
-  //     console.log(err);
-  //     setIsSuccess(false);
-  //   } finally {
-  //     // Скрываем лоадер
-  //     setIsMoviesLoading(false);
-  //   }
-  // }, [setIsMoviesLoading, setInitialMovies]);
   
   
   // // Обработчик фильтрации данных фильмов
