@@ -448,10 +448,12 @@ const handleLogin = async ({ email, password }) => {
       setInitialMovies(filteredMovies);
     } else {
       // Если чекбокс не отмечен, восстанавливаем исходный список фильмов
-      const foundMoviesInLs = filterMovies(initialMovies, search, isChecked);
+      const foundMoviesInLs = JSON.parse(localStorage.getItem("movies"));
+      const foundMoviesInLsFiltred = filterMovies(foundMoviesInLs, search, isChecked);
       // Устанавливаем найденные фильмы из локального хранилища в состояние initialMovies,
       // если они там были найдены, в противном случае устанавливаем пустой массив
-      setInitialMovies(foundMoviesInLs ? foundMoviesInLs : []);
+      setInitialMovies(foundMoviesInLsFiltred ? foundMoviesInLsFiltred : []);
+      setIsSearched(true); // Устанавливаем флаг поиска
     }
   };
 
