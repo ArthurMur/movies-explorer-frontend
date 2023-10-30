@@ -36,6 +36,7 @@ function App() {
   const [isTooltipOpen, setIsTooltipOpen] = useState(false); // Состояние, определяющее, открыто ли всплывающее окно (тултип)
   const [tooltipMessage, setTooltipMessage] = useState(''); // Состояние, содержащее сообщение во всплывающем окне (тултипе)
   const [isTooltipSuccess, setIsTooltipSuccess] = useState(true); // Состояние, определяющее, успешно ли выполнена операция во всплывающем окне (тултипе)
+  const [searchQuery, setSearchQuery] = useState(''); // Объявление состояния для хранения поискового запроса при включенном чекбоксе
 
   const { pathname } = useLocation(); // Текущий путь
   const navigate = useNavigate(); // Хук для перенаправления
@@ -438,22 +439,26 @@ const handleLogin = async ({ email, password }) => {
     }
   };
 
-  // Обработчик фильтрации коротких фильмов
-  const handleFilterShortMovies = (checked, search, isChecked) => {
-    if (checked) {
-      const filteredShortMovies = initialMovies.filter((movie) => movie.duration <= SHORT_MOVIE_DURATION);
-      setInitialMovies(filteredShortMovies);
+// Обработчик фильтрации коротких фильмов
+const handleFilterShortMovies = (checked, search, isChecked) => {
+  if (checked) {
+    const filteredShortMovies = initialMovies.filter((movie) => movie.duration <= SHORT_MOVIE_DURATION);
+    setInitialMovies(filteredShortMovies);
+
+    // Если чекбокс отмечен, сохраняем поисковый запрос
+    setSearchQuery(search);
+  } else {
+    if (!isChecked) {
+      const foundMoviesInLs = JSON.parse(localStorage.getItem('found-movies'));
+      setInitialMovies(foundMoviesInLs ? foundMoviesInLs : []);
     } else {
-      if (!isChecked) {
-        const foundMoviesInLs = JSON.parse(localStorage.getItem('found-movies'));
-        setInitialMovies(foundMoviesInLs ? foundMoviesInLs : []);
-      } else {
-        // Если флажок isChecked установлен, применяем фильтрацию фильмов по поисковому запросу
-        const allMovies = filterMovies(initialMovies, search, isChecked);
-        setInitialMovies(allMovies);
-      }
+      // Если чекбокс не отмечен и isChecked установлен, применяем сохранённый поисковый запрос
+      const allMovies = filterMovies(initialMovies, searchQuery, isChecked);
+      setInitialMovies(allMovies);
     }
-  };
+  }
+};
+
   
 
 // Обработчик фильтрации коротких сохраненных фильмов
