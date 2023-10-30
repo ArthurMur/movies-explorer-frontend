@@ -439,7 +439,7 @@ const handleLogin = async ({ email, password }) => {
   };
 
   // Обработчик фильтрации коротких фильмов
-  const handleFilterShortMovies = (checked) => {
+  const handleFilterShortMovies = (checked, search, isChecked) => {
     // Если чекбокс "Показать только короткометражки" отмечен
     if (checked) {
       // Фильтрация фильмов: оставляем только те, чья длительность меньше или равна SHORT_MOVIE_DURATION
@@ -448,7 +448,7 @@ const handleLogin = async ({ email, password }) => {
       setInitialMovies(filteredMovies);
     } else {
       // Если чекбокс не отмечен, восстанавливаем исходный список фильмов
-      const foundMoviesInLs = JSON.parse(localStorage.getItem('found-movies'));
+      const foundMoviesInLs = filterMovies(initialMovies, search, isChecked);
       // Устанавливаем найденные фильмы из локального хранилища в состояние initialMovies,
       // если они там были найдены, в противном случае устанавливаем пустой массив
       setInitialMovies(foundMoviesInLs ? foundMoviesInLs : []);
