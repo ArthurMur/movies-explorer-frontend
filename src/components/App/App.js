@@ -36,8 +36,6 @@ function App() {
   const [isTooltipOpen, setIsTooltipOpen] = useState(false); // Состояние, определяющее, открыто ли всплывающее окно (тултип)
   const [tooltipMessage, setTooltipMessage] = useState(''); // Состояние, содержащее сообщение во всплывающем окне (тултипе)
   const [isTooltipSuccess, setIsTooltipSuccess] = useState(true); // Состояние, определяющее, успешно ли выполнена операция во всплывающем окне (тултипе)
-  const [searchQuery, setSearchQuery] = useState(''); // Объявление состояния для хранения поискового запроса при включенном чекбоксе
-  const [shortMoviesChecked, setShortMoviesChecked] = useState(false);
 
   const { pathname } = useLocation(); // Текущий путь
   const navigate = useNavigate(); // Хук для перенаправления
@@ -440,27 +438,22 @@ const handleLogin = async ({ email, password }) => {
     }
   };
 
-// Обработчик фильтрации коротких фильмов
-const handleFilterShortMovies = (checked, search, isChecked) => {
-  if (checked) {
-    const filteredShortMovies = initialMovies.filter((movie) => movie.duration <= SHORT_MOVIE_DURATION);
-    setInitialMovies(filteredShortMovies);
-    setShortMoviesChecked(true); // Установка состояния чекбокса
-    setSearchQuery(search); // Сохранение поискового запроса
-  } else {
-    setShortMoviesChecked(false); // Сброс состояния чекбокса
-    if (!isChecked && searchQuery) {
-      const allMovies = filterMovies(initialMovies, searchQuery, isChecked);
-      setInitialMovies(allMovies);
+  // Обработчик фильтрации коротких фильмов
+  const handleFilterShortMovies = (checked) => {
+    // Если чекбокс "Показать только короткометражки" отмечен
+    if (checked) {
+      // Фильтрация фильмов: оставляем только те, чья длительность меньше или равна SHORT_MOVIE_DURATION
+      const filteredMovies = initialMovies.filter((movie) => movie.duration <= SHORT_MOVIE_DURATION);
+      // Устанавливаем отфильтрованные фильмы в состояние initialMovies
+      setInitialMovies(filteredMovies);
     } else {
-      // Если isChecked не установлен или поисковый запрос пуст, восстанавливаем список фильмов
+      // Если чекбокс не отмечен, восстанавливаем исходный список фильмов
       const foundMoviesInLs = JSON.parse(localStorage.getItem('found-movies'));
+      // Устанавливаем найденные фильмы из локального хранилища в состояние initialMovies,
+      // если они там были найдены, в противном случае устанавливаем пустой массив
       setInitialMovies(foundMoviesInLs ? foundMoviesInLs : []);
     }
-  }
-};
-
-  
+  };
 
 // Обработчик фильтрации коротких сохраненных фильмов
 const handleFilterShortSavedMovies = (checked) => {
