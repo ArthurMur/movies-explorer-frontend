@@ -117,29 +117,16 @@ function App() {
 
   // Фильтруем фильмы
   const filterMovies = (movies, search, isChecked) => {
-    
-    // Если нет поискового запроса, вернем исходный список фильмов
-    if (!search) {
-      return isChecked ? movies.filter(movie => movie.duration <= SHORT_MOVIE_DURATION) : movies;
-    }
-
-    // Преобразуем поисковый запрос и названия фильмов в нижний регистр для сравнения
-    const lowerCaseSearch = search.toLowerCase();
-  
-    // Фильтруем фильмы по названию (названиеRU или названиеEN), содержащему поисковой запрос
-    const foundMovies = movies.filter(movie =>
-      movie.nameRU.toLowerCase().includes(lowerCaseSearch) ||
-      movie.nameEN.toLowerCase().includes(lowerCaseSearch)
+    const filteredBySearch = movies.filter(movie =>
+      movie.nameRU.toLowerCase().includes(search.toLowerCase()) ||
+      movie.nameEN.toLowerCase().includes(search.toLowerCase())
     );
   
-    // Если не нужно фильтровать по длительности, возвращаем найденные фильмы
     if (!isChecked) {
-      return foundMovies;
+      return filteredBySearch;
     }
   
-    // Фильтруем найденные фильмы по длительности (короткометражные)
-    const shortMovies = foundMovies.filter(movie => movie.duration <= SHORT_MOVIE_DURATION);
-  
+    const shortMovies = filteredBySearch.filter(movie => movie.duration <= SHORT_MOVIE_DURATION);
     return shortMovies;
   };
   
