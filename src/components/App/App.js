@@ -117,42 +117,63 @@ function App() {
 
   // Фильтруем фильмы
   const filterMovies = (movies, search, isChecked) => {
-    // Ищем по запросу в названиях
-    const foundMovies = search
-      ? movies.filter(
-          (movie) =>
-            movie.nameRU.toLowerCase().includes(search.toLowerCase()) ||
-            movie.nameEN.toLowerCase().includes(search.toLowerCase()),
-        )
-      : movies;
-    // Фильтруем по длительности, если нужно
-    const newMoviesList = isChecked
-      ? foundMovies.filter((movie) => movie.duration <= SHORT_MOVIE_DURATION)
-      : foundMovies;
-    // Возвращаем отфильтрованный список
-    return newMoviesList;
+    
+    // Если нет поискового запроса, вернем исходный список фильмов
+    if (!search) {
+      return isChecked ? movies.filter(movie => movie.duration <= SHORT_MOVIE_DURATION) : movies;
+    }
+
+    // Преобразуем поисковый запрос и названия фильмов в нижний регистр для сравнения
+    const lowerCaseSearch = search.toLowerCase();
+  
+    // Фильтруем фильмы по названию (названиеRU или названиеEN), содержащему поисковой запрос
+    const foundMovies = movies.filter(movie =>
+      movie.nameRU.toLowerCase().includes(lowerCaseSearch) ||
+      movie.nameEN.toLowerCase().includes(lowerCaseSearch)
+    );
+  
+    // Если не нужно фильтровать по длительности, возвращаем найденные фильмы
+    if (!isChecked) {
+      return foundMovies;
+    }
+  
+    // Фильтруем найденные фильмы по длительности (короткометражные)
+    const shortMovies = foundMovies.filter(movie => movie.duration <= SHORT_MOVIE_DURATION);
+  
+    return shortMovies;
   };
   
   // Обработчик фильтрации данных фильмов
   const handleFilterMoviesData = useCallback(async (search, isChecked) => {
-    // Устанавливаем флаг поиска
-    setIsSearched(true);
-    // Получаем данные из локального хранилища
-    const savedInLs = localStorage.getItem("movies");
-    // Показываем лоадер, если данных нет
-    if (!savedInLs) {
+    // Получение данных из локального хранилища
+    const savedInLs = localStorage.getItem('movies');
+    const savedData = savedInLs ? JSON.parse(savedInLs) : null;
+  
+    // Если данных нет, показать лоадер
+    if (!savedData) {
       setIsMoviesLoading(true);
     }
+  
     try {
-      const moviesData = savedInLs ? JSON.parse(savedInLs) : await moviesApi.getMovies();
-      // Сохраняем полученные данные в хранилище
-      localStorage.setItem("movies", JSON.stringify(moviesData));
-      // Фильтруем данные
-      const newMoviesList = filterMovies(moviesData, search, isChecked);
-      // Сохраняем отфильтрованный список
-      localStorage.setItem("found-movies", JSON.stringify(newMoviesList));
-      // Обновляем стейт
-      setInitialMovies(newMoviesList);
+      let newInitialMovies;
+  
+      if (isChecked) {
+        // Если флаг isChecked установлен, фильтруем фильмы
+        newInitialMovies = savedData || [];
+        newInitialMovies = filterMovies(newInitialMovies, search, isChecked);
+        setIsSearched(true); // Устанавливаем флаг поиска
+      } else {
+        // Если флаг isChecked не установлен, получаем данные с сервера и фильтруем их
+        const moviesData = savedData || await moviesApi.getMovies();
+        localStorage.setItem('movies', JSON.stringify(moviesData));
+  
+        newInitialMovies = filterMovies(moviesData, search, isChecked);
+        localStorage.setItem('found-movies', JSON.stringify(newInitialMovies));
+        setIsSearched(true); // Устанавливаем флаг поиска
+      }
+  
+      // Обновляем стейт с отфильтрованным списком фильмов
+      setInitialMovies(newInitialMovies);
     } catch (err) {
       console.log(err);
       setIsSuccess(false);
@@ -160,7 +181,7 @@ function App() {
       // Скрываем лоадер
       setIsMoviesLoading(false);
     }
-  }, []);
+  }, [setIsMoviesLoading, setInitialMovies]);
   
   
   // // Обработчик фильтрации данных фильмов
