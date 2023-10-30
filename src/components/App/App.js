@@ -444,20 +444,20 @@ const handleFilterShortMovies = (checked, search, isChecked) => {
   if (checked) {
     const filteredShortMovies = initialMovies.filter((movie) => movie.duration <= SHORT_MOVIE_DURATION);
     setInitialMovies(filteredShortMovies);
-
-    // Если чекбокс отмечен, сохраняем поисковый запрос
+    
+    // Сохраняем поисковый запрос при включенном чекбоксе
     setSearchQuery(search);
   } else {
     if (!isChecked) {
       const foundMoviesInLs = JSON.parse(localStorage.getItem('found-movies'));
       setInitialMovies(foundMoviesInLs ? foundMoviesInLs : []);
     } else {
-      // Если чекбокс не отмечен и isChecked установлен, применяем сохранённый поисковый запрос
+      // При выключенном чекбоксе используем сохранённый поисковый запрос
       const allMovies = filterMovies(initialMovies, searchQuery, isChecked);
       setInitialMovies(allMovies);
     }
   }
-};
+}
 
   
 
