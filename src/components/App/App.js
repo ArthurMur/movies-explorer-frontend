@@ -36,6 +36,7 @@ function App() {
   const [isTooltipOpen, setIsTooltipOpen] = useState(false); // Состояние, определяющее, открыто ли всплывающее окно (тултип)
   const [tooltipMessage, setTooltipMessage] = useState(''); // Состояние, содержащее сообщение во всплывающем окне (тултипе)
   const [isTooltipSuccess, setIsTooltipSuccess] = useState(true); // Состояние, определяющее, успешно ли выполнена операция во всплывающем окне (тултипе)
+  const [isCheckbox, setCheckbox] = useState(false); // Состояние, определяющее, успешно ли выполнена операция во всплывающем окне (тултипе)
 
   const { pathname } = useLocation(); // Текущий путь
   const navigate = useNavigate(); // Хук для перенаправления
@@ -401,6 +402,7 @@ const handleLogin = async ({ email, password }) => {
         (movie) => movie.duration <= SHORT_MOVIE_DURATION,
       );
       setSavedFilteredInitialMovies(filteredMovies);
+      setCheckbox(true)
     } else {
       setSavedFilteredInitialMovies(savedInitialMovies);
     }
@@ -462,6 +464,7 @@ const handleFilterShortMovies = (checked, search, isChecked) => {
 const handleFilterShortSavedMovies = (checked) => {
   // Сохраняем состояние чекбокса "Показать только короткометражки" в локальное хранилище
   localStorage.setItem('checked-save', checked);
+  setCheckbox(true)
 
   // Получаем сохраненные фильмы из локального хранилища
   const foundMoviesInLs = JSON.parse(localStorage.getItem('saved-movies'));
@@ -559,6 +562,7 @@ const handleFilterShortSavedMovies = (checked) => {
       onFilterMovies={handleFilterMoviesData}
       onFilterShortMovies={handleFilterShortMovies}
       savedInitialMovies={savedInitialMovies}
+      isCheckbox={isCheckbox}
     />
   );
 
@@ -572,6 +576,7 @@ const handleFilterShortSavedMovies = (checked) => {
       onFilterMovies={handleFilterSavedMovies}
       onFilterShortMovies={handleFilterShortSavedMovies}
       savedInitialMovies={savedFilteredInitialMovies}
+      isCheckbox={isCheckbox}
     />
   );
 

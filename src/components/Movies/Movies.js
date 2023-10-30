@@ -25,7 +25,8 @@ function Movies({
   onError,
   onFilterMovies,
   onFilterShortMovies,
-  savedInitialMovies, }) {
+  savedInitialMovies, 
+  isCheckbox}) {
 
   const moviesLength = initialMovies.length; // Общее количество фильмов
   const [showMoviesLength, setShowMoviesLength] = useState(0); // Состояние для отображения определенного количества фильмов
@@ -46,6 +47,13 @@ function Movies({
     }
     return NUMBER_CARDS_FOR_MOBILE;
   }, [screenWidth]);
+
+  // Эффект для сброса количества фильмов после нового поиска
+  useEffect(() => {
+    if (isSearched || isCheckbox) {
+      setShowMoviesLength(getBaseCount()); // Сбросить количество отображаемых фильмов
+    }
+  }, [isSearched, getBaseCount, isCheckbox]);
 
   // Получение количества дополнительных фильмов в зависимости от ширины экрана
   const getAddCount = useCallback(
@@ -101,18 +109,6 @@ function Movies({
       window.removeEventListener('resize', handleResize);
     };
   }, [getAddCount, getBaseCount]);
-
-  // Функция для сброса количества фильмов в зависимости от текущей ширины экрана
-  const resetMoviesCount = useCallback(() => {
-    setShowMoviesLength(getBaseCount());
-  }, [getBaseCount]);
-
-  // При начале нового поиска сбросить количество фильмов
-  useEffect(() => {
-    if (isSearched) {
-      resetMoviesCount();
-    }
-  }, [isSearched, resetMoviesCount]);
 
 
   return (
