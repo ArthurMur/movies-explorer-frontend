@@ -102,6 +102,18 @@ function Movies({
     };
   }, [getAddCount, getBaseCount]);
 
+  // Функция для сброса количества фильмов в зависимости от текущей ширины экрана
+  const resetMoviesCount = useCallback(() => {
+    setShowMoviesLength(getBaseCount());
+  }, [getBaseCount]);
+
+  // При начале нового поиска сбросить количество фильмов
+  useEffect(() => {
+    if (isSearched) {
+      resetMoviesCount();
+    }
+  }, [isSearched, resetMoviesCount]);
+
 
   return (
     <main className="movies">

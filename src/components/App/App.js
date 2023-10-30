@@ -439,7 +439,7 @@ const handleLogin = async ({ email, password }) => {
   };
 
   // Обработчик фильтрации коротких фильмов
-const handleFilterShortMovies = (checked) => {
+const handleFilterShortMovies = (checked, search, isChecked) => {
   if (checked) {
     // Фильтрация короткометражных фильмов
     const filteredShortMovies = initialMovies.filter((movie) => movie.duration <= SHORT_MOVIE_DURATION);
@@ -450,14 +450,13 @@ const handleFilterShortMovies = (checked) => {
     
     if (foundMoviesInLs) {
       // Результаты найденных фильмов при включенном флажке "Короткометражка"
-      const searchedMovies = filterMovies(foundMoviesInLs, '', false); // Передача флажка короткометражности: false
+      const searchedMovies = filterMovies(foundMoviesInLs, search, isChecked); // Передача флажка короткометражности: false
       setInitialMovies(searchedMovies);
     } else {
       setInitialMovies([]);
     }
   }
 };
-
 
 // Обработчик фильтрации коротких сохраненных фильмов
 const handleFilterShortSavedMovies = (checked) => {
