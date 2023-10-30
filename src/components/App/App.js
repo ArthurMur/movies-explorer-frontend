@@ -576,7 +576,6 @@ const handleFilterShortSavedMovies = (checked) => {
       onFilterMovies={handleFilterSavedMovies}
       onFilterShortMovies={handleFilterShortSavedMovies}
       savedInitialMovies={savedFilteredInitialMovies}
-      isCheckbox={isCheckbox}
     />
   );
 
