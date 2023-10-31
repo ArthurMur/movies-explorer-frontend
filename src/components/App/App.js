@@ -488,8 +488,9 @@ const handleFilterShortSavedMovies = (checked) => {
     setSavedInitialMovies(filteredMovies ? filteredMovies : []);
   } else {
     setSavedInitialMovies([]);
-  }
-};
+    }
+  };
+}
 
   // // Функция для фильтрации фильмов по продолжительности
   // const filterMoviesByDuration = (movies, duration) => {
