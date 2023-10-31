@@ -102,6 +102,17 @@ function Movies({
     };
   }, [getAddCount, getBaseCount]);
 
+  // Функция сброса отображаемых фильмов на основе ширины экрана
+  const resetDisplayedMovies = useCallback(() => {
+    setAddMoviesCount(getAddCount());
+    setShowMoviesLength(getBaseCount());
+  }, [getAddCount, getBaseCount]);
+
+  // Функция для сброса отображаемых фильмов при поиске или изменении флажка
+  const handleSearchOrCheckboxChange = useCallback(() => {
+    resetDisplayedMovies();
+  }, [resetDisplayedMovies]);
+
 
   return (
     <main className="movies">
@@ -110,6 +121,7 @@ function Movies({
         onFilterShortMovies={onFilterShortMovies}
         isLoading={isLoading}
         onError={onError}
+        onSearchOrCheckboxChange={handleSearchOrCheckboxChange}
       />
       {isLoading && <Preloader />}
       {!isLoading && isSearched && (
