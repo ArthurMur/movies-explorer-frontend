@@ -454,9 +454,13 @@ const handleLogin = async ({ email, password }) => {
     } else {
       // Если чекбокс не отмечен, восстанавливаем исходный список фильмов
       const foundMoviesInLs = JSON.parse(localStorage.getItem('movies'));
-      // Устанавливаем найденные фильмы из локального хранилища в состояние initialMovies,
-      // если они там были найдены, в противном случае устанавливаем пустой массив
-      setInitialMovies(foundMoviesInLs ? foundMoviesInLs : []);
+      if (foundMoviesInLs) {
+        const searchQuery = localStorage.getItem('search');
+        const filteredMovies = filterMovies(foundMoviesInLs, searchQuery, false);
+        setInitialMovies(filteredMovies);
+      } else {
+        setInitialMovies([]);
+      }
     }
   };
 
