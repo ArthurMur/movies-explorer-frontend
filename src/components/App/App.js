@@ -173,7 +173,7 @@ function App() {
       }
 
       // Фильтруем фильмы, если есть поисковой запрос
-      if (search) {
+      if (!isChecked && search) {
         newInitialMovies = filterMovies(newInitialMovies, search, isChecked);
       }
   
