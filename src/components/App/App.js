@@ -480,7 +480,14 @@ const handleFilterShortSavedMovies = (checked) => {
     setSavedFilteredInitialMovies(filteredMovies);
   } else {
     // Если чекбокс не отмечен, восстанавливаем изначальные сохраненные фильмы
-    setSavedInitialMovies(foundMoviesInLs ? foundMoviesInLs : []);
+    const foundSavedMoviesInLs = JSON.parse(localStorage.getItem('saved-movies'));
+      if (foundSavedMoviesInLs) {
+        const searchQuery = localStorage.getItem('search');
+        const filteredMovies = filterMovies(foundSavedMoviesInLs, searchQuery, false);
+    
+    setSavedInitialMovies(filteredMovies ? filteredMovies : []);
+  } else {
+    setSavedInitialMovies([]);
   }
 };
 
