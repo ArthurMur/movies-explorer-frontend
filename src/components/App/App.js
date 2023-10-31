@@ -36,7 +36,6 @@ function App() {
   const [isTooltipOpen, setIsTooltipOpen] = useState(false); // Состояние, определяющее, открыто ли всплывающее окно (тултип)
   const [tooltipMessage, setTooltipMessage] = useState(''); // Состояние, содержащее сообщение во всплывающем окне (тултипе)
   const [isTooltipSuccess, setIsTooltipSuccess] = useState(true); // Состояние, определяющее, успешно ли выполнена операция во всплывающем окне (тултипе)
-  const [isCheckbox, setCheckbox] = useState(false); // Состояние, определяющее, успешно ли выполнена операция во всплывающем окне (тултипе)
 
   const { pathname } = useLocation(); // Текущий путь
   const navigate = useNavigate(); // Хук для перенаправления
@@ -171,6 +170,11 @@ function App() {
         newInitialMovies = filterMovies(moviesData, search, isChecked);
         localStorage.setItem('found-movies', JSON.stringify(newInitialMovies));
         setIsSearched(true); // Устанавливаем флаг поиска
+      }
+
+      // Фильтруем фильмы, если есть поисковой запрос
+      if (search) {
+        newInitialMovies = filterMovies(newInitialMovies, search, isChecked);
       }
   
       // Обновляем стейт с отфильтрованным списком фильмов
@@ -402,7 +406,6 @@ const handleLogin = async ({ email, password }) => {
         (movie) => movie.duration <= SHORT_MOVIE_DURATION,
       );
       setSavedFilteredInitialMovies(filteredMovies);
-      setCheckbox(true)
     } else {
       setSavedFilteredInitialMovies(savedInitialMovies);
     }
@@ -441,30 +444,26 @@ const handleLogin = async ({ email, password }) => {
   };
 
   // Обработчик фильтрации коротких фильмов
-const handleFilterShortMovies = (checked, search, isChecked) => {
-  if (checked) {
-    // Фильтрация короткометражных фильмов
-    const filteredShortMovies = initialMovies.filter((movie) => movie.duration <= SHORT_MOVIE_DURATION);
-    setInitialMovies(filteredShortMovies);
-  } else {
-    // Возвращаем результаты поиска с учетом флажка "Короткометражка"
-    const foundMoviesInLs = JSON.parse(localStorage.getItem('found-movies'));
-    
-    if (foundMoviesInLs) {
-      // Результаты найденных фильмов при включенном флажке "Короткометражка"
-      const searchedMovies = filterMovies(foundMoviesInLs, search, isChecked); // Передача флажка короткометражности: false
-      setInitialMovies(searchedMovies);
+  const handleFilterShortMovies = (checked) => {
+    // Если чекбокс "Показать только короткометражки" отмечен
+    if (checked) {
+      // Фильтрация фильмов: оставляем только те, чья длительность меньше или равна SHORT_MOVIE_DURATION
+      const filteredMovies = initialMovies.filter((movie) => movie.duration <= SHORT_MOVIE_DURATION);
+      // Устанавливаем отфильтрованные фильмы в состояние initialMovies
+      setInitialMovies(filteredMovies);
     } else {
-      setInitialMovies([]);
+      // Если чекбокс не отмечен, восстанавливаем исходный список фильмов
+      const foundMoviesInLs = JSON.parse(localStorage.getItem('movies'));
+      // Устанавливаем найденные фильмы из локального хранилища в состояние initialMovies,
+      // если они там были найдены, в противном случае устанавливаем пустой массив
+      setInitialMovies(foundMoviesInLs ? foundMoviesInLs : []);
     }
-  }
-};
+  };
 
 // Обработчик фильтрации коротких сохраненных фильмов
 const handleFilterShortSavedMovies = (checked) => {
   // Сохраняем состояние чекбокса "Показать только короткометражки" в локальное хранилище
   localStorage.setItem('checked-save', checked);
-  setCheckbox(true)
 
   // Получаем сохраненные фильмы из локального хранилища
   const foundMoviesInLs = JSON.parse(localStorage.getItem('saved-movies'));
@@ -562,7 +561,6 @@ const handleFilterShortSavedMovies = (checked) => {
       onFilterMovies={handleFilterMoviesData}
       onFilterShortMovies={handleFilterShortMovies}
       savedInitialMovies={savedInitialMovies}
-      isCheckbox={isCheckbox}
     />
   );
 
