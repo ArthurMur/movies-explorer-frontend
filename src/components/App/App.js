@@ -480,17 +480,9 @@ const handleFilterShortSavedMovies = (checked) => {
     setSavedFilteredInitialMovies(filteredMovies);
   } else {
     // Если чекбокс не отмечен, восстанавливаем изначальные сохраненные фильмы
-    const foundSavedMoviesInLs = JSON.parse(localStorage.getItem('saved-movies'));
-      if (foundSavedMoviesInLs) {
-        const searchQuery = localStorage.getItem('search');
-        const filteredMovies = filterMovies(foundSavedMoviesInLs, searchQuery, false);
-    
-    setSavedInitialMovies(filteredMovies ? filteredMovies : []);
-  } else {
-    setSavedInitialMovies([]);
-    }
-  };
-}
+    setSavedInitialMovies(foundMoviesInLs ? foundMoviesInLs : []);
+  }
+};
 
   // // Функция для фильтрации фильмов по продолжительности
   // const filterMoviesByDuration = (movies, duration) => {
