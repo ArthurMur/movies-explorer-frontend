@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useForm } from '../../hooks/useForm';
 
-function SearchForm({ onFilterMovies, onFilterShortMovies, isLoading, onError }) {
+function SearchForm({ onFilterMovies, onFilterShortMovies, isLoading, onError, onSearchOrCheckboxChange }) {
 
   // Получение текущего пути
   const { pathname } = useLocation();
@@ -35,8 +35,9 @@ function SearchForm({ onFilterMovies, onFilterShortMovies, isLoading, onError })
       } else {
         onError(); // Если не выполняем фильтрацию (например, пустой поисковый запрос), вызываем функцию onError
       }
+      onSearchOrCheckboxChange();
     },
-    [isChecked, isMovies, onFilterMovies, values.search, onError]
+    [isChecked, isMovies, onFilterMovies, values.search, onError, onSearchOrCheckboxChange]
   );
 
   // Обработчик изменения чекбокса 
@@ -51,8 +52,9 @@ function SearchForm({ onFilterMovies, onFilterShortMovies, isLoading, onError })
       }
 
       onFilterShortMovies(checked); // Вызываем функцию onFilterShortMovies с переданным состоянием чекбокса
+      onSearchOrCheckboxChange();
     },
-    [isMovies, onFilterShortMovies]
+    [isMovies, onFilterShortMovies, onSearchOrCheckboxChange]
   );
 
   // Эффект для установки начального состояния формы на основе данных из localStorage
