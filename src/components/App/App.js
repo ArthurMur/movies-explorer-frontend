@@ -62,29 +62,6 @@ function App() {
 
     // Проверка токена при загрузке страницы и получение информации о пользователе
     useEffect(() => {
-      // const validateToken = async () => {
-      //   setIsPageLoading(true);
-      //   try {
-      //     const jwt = localStorage.getItem('jwt');
-      //     console.log('jwt: ', jwt);
-      //     const loginTrue = localStorage.getItem('loginTrue');
-      //     console.log('loginTrue: ', loginTrue);
-      //     if (loginTrue) {
-      //       const userData = await mainApi.getUserInfo();
-      //       console.log('userData: ', userData);
-      //       if (userData) {
-      //         setIsLoggedIn(true);
-      //         setCurrentUser(userData);
-      //       }
-      //     }
-      //   } catch (err) {
-      //     console.log(err);
-      //     handleError(err);
-      //   } finally {
-      //     setIsPageLoading(false);
-      //   }
-      // };
-      // validateToken();
       mainApi.getToken();
       const jwt = localStorage.getItem('jwt');
     if(jwt) {
@@ -100,20 +77,6 @@ function App() {
         })
     }
     }, [isLoggedIn, handleError]);
-
-  // useEffect(() => {
-  //   mainApi.getToken();
-  //   if(isLoggedIn) {
-  //     mainApi.getAllNeededData()
-  //       .then(([userInfo, savedByUserMovies]) => {
-  //         setCurrentUser(userInfo);
-  //         setSavedInitialMovies(savedByUserMovies);
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       })
-  //   }
-  // }, [isLoggedIn]);
 
   // Фильтруем фильмы
   const filterMovies = (movies, search, isChecked) => {
@@ -187,42 +150,6 @@ function App() {
       setIsMoviesLoading(false);
     }
   }, [setIsMoviesLoading, setInitialMovies]);
-  
-  
-  // // Обработчик фильтрации данных фильмов
-  // const handleFilterMoviesData = useCallback(async (search, isChecked) => {
-  //   // Устанавливаем флаг поиска
-  //   setIsSearched(true);
-  //   // Получение данных из локального хранилища
-  //   const savedInLs = localStorage.getItem('movies');
-  //   const savedData = savedInLs ? JSON.parse(savedInLs) : null;
-
-  //   // Если данных нет, показать лоадер
-  //   if (!savedData) {
-  //     setIsMoviesLoading(true);
-  //   }
-
-  //   try {
-  //     // Если данные не были загружены, получить их с сервера
-  //     const moviesData = savedData || await moviesApi.getMovies();
-  //     // Сохранить данные в хранилище
-  //     localStorage.setItem('movies', JSON.stringify(moviesData));
-
-  //     // Фильтруем данные
-  //     const newInitialMovies = filterMovies(moviesData, search, isChecked);
-  //     // Сохраняем отфильтрованный список
-  //     localStorage.setItem('found-movies', JSON.stringify(newInitialMovies));
-
-  //     // Обновляем стейт с отфильтрованным списком фильмов
-  //     setInitialMovies(newInitialMovies);
-  //   } catch (err) {
-  //     console.log(err);
-  //     setIsSuccess(false);
-  //   } finally {
-  //     // Скрываем лоадер
-  //     setIsMoviesLoading(false);
-  //   }
-  // }, []);
 
   // Получение данных о фильмах
   const getMovies = useCallback(async () => {
@@ -284,24 +211,6 @@ function App() {
 const handleLogin = async ({ email, password }) => {
   setIsLoginLoading(true); // Устанавливаем флаг загрузки во время входа
 
-  // try {
-  //   const { data } = await mainApi.loginUser({ email, password }); // Запрос на сервер для входа пользователя
-  //   console.log('вывод data в handleLogin: ',data);
-  //   const registerTrue = localStorage.getItem('registerTrue');
-  //   console.log('registerTrue: ', registerTrue);
-  //   setCurrentUser(data); // Устанавливаем данные текущего пользователя после успешного входа
-  //   navigate('/movies', { replace: true }); // Перенаправляем пользователя на страницу фильмов после успешного входа
-  //   setIsLoggedIn(true); // Устанавливаем флаг "пользователь вошел в систему"
-  //   localStorage.setItem('loginTrue', 'true'); // Сохраняем информацию о входе в локальное хранилище
-  //   console.log('вывод data в handleLogin: ',data);
-  // } catch (err) {
-  //   console.log(err); // Логируем ошибку, если вход не удался
-  //   handleError(err); // Обрабатываем ошибку входа
-  //   setIsLoggedIn(false); // Устанавливаем флаг "пользователь не вошел в систему"
-  // } finally {
-  //   setIsLoginLoading(false); // Скрываем лоадер после завершения операции входа
-  // }
-
   mainApi.loginUser({ email, password })
   .then((res) => {
     localStorage.setItem('jwt', res.token);
@@ -328,20 +237,7 @@ const handleLogin = async ({ email, password }) => {
   // Обработчик регистрации
   const handleRegister = async ({ name, email, password }) => {
     setIsRegisterLoading(true); // Устанавливаем флаг загрузки во время регистрации
-    // try {
-    //   const { data } = await mainApi.registerUser({ name, email, password }); // Регистрируем пользователя
-    //   console.log('вывод data в handleRegister: ',data);
-    //   if (data) {
-    //     // Если регистрация прошла успешно, выполняем вход пользователя
-    //     handleLogin({ email, password });
-    //   }
-    // } catch (err) {
-    //   console.log(err);
-    //   handleError(err);
-    //   setIsLoggedIn(false); // Устанавливаем флаг "пользователь не вошел в систему"
-    // } finally {
-    //   setIsRegisterLoading(false); // Скрываем лоадер после завершения операции
-    // }
+
     mainApi.registerUser({ name, email, password })
     .then(() => {
       handleLogin({email, password});
@@ -410,20 +306,6 @@ const handleLogin = async ({ email, password }) => {
       setSavedFilteredInitialMovies(savedInitialMovies);
     }
   }, [savedInitialMovies]);
-  // useEffect(() => {
-  //   // Проверяем, сохранена ли информация о фильтрации в локальном хранилище
-  //   const isFilterChecked = localStorage.getItem('checked-save') === 'true';
-  //   console.log('isFilterChecked: ', isFilterChecked);
-
-  //   // Фильтруем список сохраненных фильмов в зависимости от значения isFilterChecked
-  //   const filteredMovies = isFilterChecked
-  //     ? savedInitialMovies.filter((movie) => movie.duration <= SHORT_MOVIE_DURATION)
-  //     : savedInitialMovies;
-  //   console.log('filteredMovies: ', filteredMovies);
-
-  //   // Обновляем состояние с отфильтрованным списком
-  //   setSavedFilteredInitialMovies(filteredMovies);
-  // }, [savedInitialMovies]);
 
   // Обработчик удаления фильма
   const handleDeleteClick = async (movieId) => {
@@ -483,49 +365,6 @@ const handleFilterShortSavedMovies = (checked) => {
     setSavedInitialMovies(foundMoviesInLs ? foundMoviesInLs : []);
   }
 };
-
-  // // Функция для фильтрации фильмов по продолжительности
-  // const filterMoviesByDuration = (movies, duration) => {
-  //   return movies.filter((movie) => movie.duration <= duration);  
-  // };
-
-  // // Функция для обновления списка фильмов в зависимости от фильтрации
-  // const updateInitialMovies = (checked, duration, setInitialMovies, setSavedInitialMovies) => {
-  //   if (checked) {
-  //     // Фильтруем фильмы по продолжительности
-  //     const filteredMovies = filterMoviesByDuration(initialMovies, duration);
-  //     setInitialMovies(filteredMovies);
-  //   } else {
-  //     // Если фильтрация отключена, восстанавливаем список из локального хранилища
-  //     const foundMoviesInLs = JSON.parse(localStorage.getItem('found-movies'));
-  //     setInitialMovies(foundMoviesInLs || []);
-  //   }
-
-  //   if (setSavedInitialMovies) {
-  //     // Обрабатываем фильтрацию для сохраненных фильмов, если есть
-  //     localStorage.setItem('checked-save', checked);
-  //     const foundMoviesInLs = JSON.parse(localStorage.getItem('saved-movies'));
-  //     console.log('foundMoviesInLs: ', foundMoviesInLs);
-  //     console.log('checked: ', checked);
-  //     if (checked) {
-  //       const filteredSavedMovies = filterMoviesByDuration(foundMoviesInLs, duration);
-  //       console.log('filteredSavedMovies: ', filteredSavedMovies);
-  //       setSavedInitialMovies(filteredSavedMovies);
-  //     } else {
-  //       setSavedInitialMovies(foundMoviesInLs || []);
-  //     }
-  //   }
-  // };
-
-  // // Обработчик фильтрации коротких фильмов
-  // const handleFilterShortMovies = (checked) => {
-  //   updateInitialMovies(checked, SHORT_MOVIE_DURATION, setInitialMovies);
-  // };
-
-  // // Обработчик фильтрации коротких сохраненных фильмов
-  // const handleFilterShortSavedMovies = (checked) => {
-  //   updateInitialMovies(checked, SHORT_MOVIE_DURATION, setSavedFilteredInitialMovies, setSavedInitialMovies);
-  // };
 
   // Обработчик выхода из системы
   const handleLogout = async () => {
