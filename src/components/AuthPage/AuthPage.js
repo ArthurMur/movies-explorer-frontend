@@ -13,8 +13,15 @@ function AuthPage({
   onSubmit,
   autorize,
   place,
+  isFormValid,
   children,
 }) {
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onSubmit(event); // Вызываем переданный обработчик handleSubmit
+  };
+  
   return (
     <section
       className="auth-page mobile-container-small"
@@ -26,9 +33,10 @@ function AuthPage({
         btnText={btnText}
         type={name}
         name={name}
-        onSubmit={onSubmit}
+        handleSubmit={handleSubmit}
         autorize={autorize}
         place={place}
+        isFormValid={isFormValid}
       >
         {children}
       </Form>

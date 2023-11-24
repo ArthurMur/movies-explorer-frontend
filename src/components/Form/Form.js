@@ -1,21 +1,35 @@
 import './Form.css';
 
-function Form({ name, onSubmit, place, autorize, btnText, isProfileEdit = true, children }) {
+import { LOADING_TEXT } from '../../utils/constants';
 
+function Form({   name,
+  isFormValid,
+  handleSubmit,
+  errorText,
+  isLoading,
+  place,
+  autorize,
+  btnText,
+  isProfileEdit = true,
+  children, }) {
   return (
-    <form name={name} onSubmit={onSubmit} className={`form form_place_${place}`}>
+    <form name={name} onSubmit={handleSubmit} className={`form form_place_${place}`}>
       {children}
       <div
         className={`form__container ${
           place !== 'profile' ? `form__container_path_${autorize}` : ''
         }`}
       >
+      <span className="form__error">{errorText}</span>
         {isProfileEdit && (
           <button
-            className={`form__btn ${place === 'profile' ? 'form__btn_form_profile' : ''}`}
+            className={`form__btn ${place === 'profile' ? 'form__btn_form_profile' : ''} ${
+              !isFormValid ? 'form__btn_disabled' : ''
+            }`}
             type="submit"
+            disabled={!isFormValid}
           >
-            {btnText}
+            {isLoading ? LOADING_TEXT : btnText}
           </button>
         )}
       </div>

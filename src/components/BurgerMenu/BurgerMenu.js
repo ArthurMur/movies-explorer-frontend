@@ -16,6 +16,7 @@ function BurgerMenu({ isOpen, onClose }) {
               className={({ isActive }) =>
                 `burger-menu__link ${isActive ? 'burger-menu__link_active' : ''}`
               }
+              onClick={onClose}
             >
               Главная
             </NavLink>
@@ -26,6 +27,7 @@ function BurgerMenu({ isOpen, onClose }) {
               className={({ isActive }) =>
                 `burger-menu__link ${isActive ? 'burger-menu__link_active' : ''}`
               }
+              onClick={onClose}
             >
               Фильмы
             </NavLink>
@@ -36,12 +38,13 @@ function BurgerMenu({ isOpen, onClose }) {
               className={({ isActive }) =>
                 `burger-menu__link ${isActive ? 'burger-menu__link_active' : ''}`
               }
+              onClick={onClose}
             >
               Сохранённые фильмы
             </NavLink>
           </li>
         </ul>
-        <AccountBtn />
+        <AccountBtn onClose={onClose}/>
       </aside>
     </Overlay>
   );

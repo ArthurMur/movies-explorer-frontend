@@ -20,6 +20,12 @@
   line-height: normal;
 }
 
+.form__btn_disabled {
+  cursor: not-allowed;
+  color: var(--btn-color-grey);
+  background-color: var(--btn-color-white);
+}
+
 .form__container {
   display: flex;
   gap: 5px;

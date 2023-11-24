@@ -36,12 +36,20 @@
 
 .register__input_type_password {
   margin: 10px 0 0 0;
-  color: var(--btn-color-red);
   font-size: 8px;
 }
 
 .register__input_type_password:focus {
   font-size: 8px;
+  border-bottom: 1px solid var(--btn-color-red);
+}
+
+.register__input_invalid {
+  color: var(--btn-color-red);
+  border-bottom: 1px solid var(--btn-color-red);
+}
+
+.register__input:invalid:focus {
   border-bottom: 1px solid var(--btn-color-red);
 }
 

@@ -6,7 +6,14 @@ Movies — cервис, в котором можно найти фильмы п�
 
 Репозиторий проекта: [GitHub](https://github.com/ArthurMur/movies-explorer-frontend)
 
+Бэкенд проекта: [Бэкенд](https://api.films.nomoredomainsrocks.ru)
+
+Фронтенд проекта: [Фронтенд](https://films.nomoredomainsrocks.ru)
+
 Макет Figma: [Figma](https://www.figma.com/file/6FMWkB94wE7KTkcCgUXtnC/%D0%94%D0%B8%D0%BF%D0%BB%D0%BE%D0%BC%D0%BD%D1%8B%D0%B9-%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82?type=design&node-id=1-8436&mode=dev)
+
+Ссылка на Pull Request: [Pull Request](https://github.com/ArthurMur/movies-explorer-frontend/pull/2)
+
 ## Доступные скрипты
 
 В каталоге проекта вы можете выполнить:
